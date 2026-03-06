@@ -37,13 +37,13 @@ async def convert(req: ConvertRequest):
 
 
 class NPSHRequest(BaseModel):
-    p_atm_kpa: float
-    p_vapor_kpa: float
-    z_s_m: float
-    h_loss_m: float
-    fluid_density_kg_m3: float
-    g: float = 9.81
-    npshr_m: float | None = None
+    p_atm_kpa: float = Field(..., gt=0, description="Absolute pressure at fluid surface (kPa)")
+    p_vapor_kpa: float = Field(..., ge=0, description="Fluid vapor pressure at operating temperature (kPa)")
+    z_s_m: float = Field(..., description="Suction head (m) — positive if fluid above pump")
+    h_loss_m: float = Field(..., ge=0, description="Total friction losses in suction piping (m)")
+    fluid_density_kg_m3: float = Field(..., gt=0, description="Fluid density (kg/m³)")
+    g: float = Field(default=9.81, gt=0, description="Gravitational acceleration (m/s²)")
+    npshr_m: float | None = Field(default=None, gt=0, description="Required NPSH from pump curve (m)")
 
 
 @router.post("/npsh")
