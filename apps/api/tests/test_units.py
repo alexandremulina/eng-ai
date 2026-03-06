@@ -1,5 +1,7 @@
 import pytest
 from app.services.units import convert_unit, ConversionError
+from httpx import AsyncClient, ASGITransport
+from app.main import app
 
 
 def test_flow_gpm_to_m3h():
@@ -25,3 +27,28 @@ def test_invalid_conversion_raises():
 def test_temperature_celsius_to_fahrenheit():
     result = convert_unit(100, "degC", "degF")
     assert abs(result - 212.0) < 0.001
+
+
+@pytest.mark.asyncio
+async def test_convert_endpoint_success():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.post("/calculations/convert", json={
+            "value": 100,
+            "from_unit": "psi",
+            "to_unit": "bar",
+            "decimals": 4
+        })
+    assert response.status_code == 200
+    data = response.json()
+    assert abs(data["result"] - 6.8948) < 0.001
+
+
+@pytest.mark.asyncio
+async def test_convert_endpoint_incompatible_units_returns_400():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.post("/calculations/convert", json={
+            "value": 100,
+            "from_unit": "gpm",
+            "to_unit": "bar"
+        })
+    assert response.status_code == 400

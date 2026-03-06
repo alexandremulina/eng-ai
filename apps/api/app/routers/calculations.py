@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.services.units import convert_unit, ConversionError
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
@@ -9,7 +9,7 @@ class ConvertRequest(BaseModel):
     value: float
     from_unit: str
     to_unit: str
-    decimals: int = 4
+    decimals: int = Field(default=4, ge=0, le=15)
 
 
 class ConvertResponse(BaseModel):
@@ -30,4 +30,4 @@ async def convert(req: ConvertRequest):
             result=result,
         )
     except ConversionError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))

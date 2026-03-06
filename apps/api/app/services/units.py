@@ -1,4 +1,4 @@
-from pint import UnitRegistry, DimensionalityError
+from pint import UnitRegistry, DimensionalityError, UndefinedUnitError
 
 ureg = UnitRegistry()
 
@@ -42,5 +42,7 @@ def convert_unit(value: float, from_unit: str, to_unit: str, decimals: int = 6) 
         return round(float(converted), decimals)
     except DimensionalityError as e:
         raise ConversionError(f"Cannot convert {from_unit} to {to_unit}: incompatible dimensions") from e
+    except UndefinedUnitError as e:
+        raise ConversionError(f"Unknown unit: {e}") from e
     except Exception as e:
         raise ConversionError(f"Conversion error: {e}") from e
