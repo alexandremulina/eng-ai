@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import calculations
+from app.routers import calculations, norms
 
 app = FastAPI(title="EngBrain API", version="0.1.0")
 
@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 app.include_router(calculations.router)
+app.include_router(norms.router)
 
 
 @app.get("/health")
