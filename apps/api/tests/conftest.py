@@ -10,4 +10,4 @@ def mock_user():
     """Override get_current_user dependency for tests that need it."""
     app.dependency_overrides[get_current_user] = lambda: TEST_USER
     yield TEST_USER
-    app.dependency_overrides.clear()
+    del app.dependency_overrides[get_current_user]
