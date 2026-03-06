@@ -37,6 +37,8 @@ def calculate_head_loss(
         raise ValueError("pipe_diameter_mm must be positive")
     if pipe_length_m <= 0:
         raise ValueError("pipe_length_m must be positive")
+    if pipe_roughness_mm < 0:
+        raise ValueError("pipe_roughness_mm must be >= 0 (use 0 for smooth pipe)")
     if fluid_density_kg_m3 <= 0:
         raise ValueError("fluid_density_kg_m3 must be positive")
     if fluid_viscosity_cP <= 0:

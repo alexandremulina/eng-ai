@@ -88,20 +88,22 @@ def test_darcy_weisbach_physics():
 
 
 def test_transitional_regime():
-    """Flow in Re 2300–4000 range is labelled transitional."""
-    # Tune inputs to land Re ~3000
+    """Flow in Re 2300–4000 range is labelled transitional.
+
+    D=50mm, flow=1.5 m³/h, density=1000 kg/m³, viscosity=3.5 cP -> Re≈3032.
+    """
     result = calculate_head_loss(
-        flow_m3h=2.0,
+        flow_m3h=1.5,
         pipe_diameter_mm=50.0,
         pipe_length_m=10.0,
         pipe_roughness_mm=0.046,
-        fluid_density_kg_m3=900.0,
-        fluid_viscosity_cP=10.0,
+        fluid_density_kg_m3=1000.0,
+        fluid_viscosity_cP=3.5,
     )
-    if 2300 < result.reynolds_number < 4000:
-        assert result.flow_regime == "transitional"
-    # Otherwise just confirm it's valid
-    assert result.flow_regime in ("laminar", "turbulent", "transitional")
+    assert 2300 < result.reynolds_number < 4000, (
+        f"Expected Re in transitional range 2300-4000, got {result.reynolds_number}"
+    )
+    assert result.flow_regime == "transitional"
 
 
 @pytest.mark.asyncio
