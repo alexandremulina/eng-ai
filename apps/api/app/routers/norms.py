@@ -22,6 +22,7 @@ async def query(req: NormQueryRequest, user: dict = Depends(get_current_user)):
         result = await query_norms(req.question, user["id"], req.language)
         return result
     except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="AI service temporarily unavailable")
+        # Config error (missing API key, etc.)
+        raise HTTPException(status_code=500, detail=f"Service configuration error: {e}")
+    except Exception:
+        raise HTTPException(status_code=503, detail="AI service temporarily unavailable")

@@ -60,7 +60,7 @@ async def test_query_norms_endpoint_returns_answer(mock_user):
     from app.main import app
     with patch("app.routers.norms.query_norms", new_callable=AsyncMock, return_value={
         "answer": "NPSHr is ...", "citations": []
-    }):
+    }), patch("app.routers.norms.check_and_record_usage"):
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             response = await client.post(
                 "/norms/query",

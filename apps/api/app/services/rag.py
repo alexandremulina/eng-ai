@@ -1,3 +1,4 @@
+import asyncio
 import openai
 from app.core.config import get_settings
 from app.core.supabase import get_supabase
@@ -43,15 +44,19 @@ async def search_norm_documents(
 ) -> list[dict]:
     """Search Supabase pgvector for relevant norm sections."""
     supabase = get_supabase()
-    results = supabase.rpc(
-        "match_norm_documents",
-        {
-            "query_embedding": question_embedding,
-            "match_threshold": match_threshold,
-            "match_count": match_count,
-            "filter_user_id": user_id,
-        },
-    ).execute()
+
+    def _execute():
+        return supabase.rpc(
+            "match_norm_documents",
+            {
+                "query_embedding": question_embedding,
+                "match_threshold": match_threshold,
+                "match_count": match_count,
+                "filter_user_id": user_id,
+            },
+        ).execute()
+
+    results = await asyncio.to_thread(_execute)
     return results.data or []
 
 
