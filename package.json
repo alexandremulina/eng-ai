@@ -1,0 +1,5 @@
+{
+  "name": "eng-brain",
+  "private": true,
+  "workspaces": ["apps/web"]
+}
