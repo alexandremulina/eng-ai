@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from app.services.units import convert_unit, ConversionError
 from app.services.npsh import calculate_npsha
+from app.services.head_loss import calculate_head_loss
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
 
@@ -55,6 +56,31 @@ async def npsh(req: NPSHRequest):
             "npshr_m": result.npshr_m,
             "safety_margin_m": result.safety_margin_m,
             "cavitation_risk": result.cavitation_risk,
+            "formula": result.formula,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class HeadLossRequest(BaseModel):
+    flow_m3h: float = Field(..., gt=0, description="Volumetric flow rate (m³/h)")
+    pipe_diameter_mm: float = Field(..., gt=0, description="Internal pipe diameter (mm)")
+    pipe_length_m: float = Field(..., gt=0, description="Pipe length (m)")
+    pipe_roughness_mm: float = Field(default=0.046, ge=0, description="Absolute pipe roughness (mm) — 0.046 = commercial steel")
+    fluid_density_kg_m3: float = Field(default=998.2, gt=0, description="Fluid density (kg/m³)")
+    fluid_viscosity_cP: float = Field(default=1.002, gt=0, description="Dynamic viscosity (cP)")
+
+
+@router.post("/head-loss")
+async def head_loss(req: HeadLossRequest):
+    try:
+        result = calculate_head_loss(**req.model_dump())
+        return {
+            "head_loss_m": result.head_loss_m,
+            "velocity_m_s": result.velocity_m_s,
+            "reynolds_number": result.reynolds_number,
+            "friction_factor": result.friction_factor,
+            "flow_regime": result.flow_regime,
             "formula": result.formula,
         }
     except ValueError as e:
