@@ -23,13 +23,15 @@ def count_monthly_usage(user_id: str, event_type: str) -> int:
     )
     result = (
         supabase.table("usage_events")
-        .select("id", count="exact")
+        .select("*", count="exact")
         .eq("user_id", user_id)
         .eq("event_type", event_type)
         .gte("created_at", start_of_month.isoformat())
         .execute()
     )
-    return result.count or 0
+    if result.count is not None:
+        return int(result.count)
+    return len(result.data)
 
 
 def check_and_record_usage(user_id: str, event_type: str) -> None:

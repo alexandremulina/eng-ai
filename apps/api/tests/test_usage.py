@@ -80,8 +80,25 @@ def test_count_monthly_usage():
 
 def test_count_monthly_usage_returns_zero_when_none():
     with patch("app.services.usage.get_supabase") as mock_sb:
-        (
-            mock_sb.return_value.table.return_value.select.return_value.eq.return_value.eq.return_value.gte.return_value.execute.return_value.count
-        ) = None
+        mock_result = mock_sb.return_value.table.return_value.select.return_value.eq.return_value.eq.return_value.gte.return_value.execute.return_value
+        mock_result.count = None
+        mock_result.data = []
         result = count_monthly_usage("user-123", "calculation")
     assert result == 0
+
+
+def test_count_monthly_usage_returns_int():
+    with patch("app.services.usage.get_supabase") as mock_sb:
+        mock_sb.return_value.table.return_value.select.return_value.eq.return_value.eq.return_value.gte.return_value.execute.return_value.count = 7
+        result = count_monthly_usage("user-123", "calculation")
+    assert isinstance(result, int)
+    assert result == 7
+
+
+def test_count_monthly_usage_falls_back_to_len_data_when_count_none():
+    with patch("app.services.usage.get_supabase") as mock_sb:
+        mock_result = mock_sb.return_value.table.return_value.select.return_value.eq.return_value.eq.return_value.gte.return_value.execute.return_value
+        mock_result.count = None
+        mock_result.data = [{"id": 1}, {"id": 2}, {"id": 3}]
+        result = count_monthly_usage("user-123", "calculation")
+    assert result == 3
