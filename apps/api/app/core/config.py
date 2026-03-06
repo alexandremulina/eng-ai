@@ -1,16 +1,25 @@
-from pydantic_settings import BaseSettings
+from functools import lru_cache
+from typing import Optional
+
 from pydantic import ConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     model_config = ConfigDict(env_file=".env")
 
-    openrouter_api_key: str = ""
-    supabase_url: str = ""
-    supabase_service_key: str = ""
-    stripe_secret_key: str = ""
-    stripe_webhook_secret: str = ""
+    openrouter_api_key: Optional[str] = None
+    supabase_url: Optional[str] = None
+    supabase_service_key: Optional[str] = None
+    stripe_secret_key: Optional[str] = None
+    stripe_webhook_secret: Optional[str] = None
     environment: str = "development"
+    cors_origins: list[str] = ["http://localhost:3000", "https://engbrain.app"]
 
 
-settings = Settings()
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+
+settings = get_settings()  # backward compat
