@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from app.services.units import convert_unit, ConversionError
 from app.services.npsh import calculate_npsha
 from app.services.head_loss import calculate_head_loss
+from app.services.usage import check_and_record_usage
 from app.core.auth import get_current_user
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
@@ -51,6 +52,10 @@ class NPSHRequest(BaseModel):
 @router.post("/npsh")
 async def npsh(req: NPSHRequest, user: dict = Depends(get_current_user)):
     try:
+        check_and_record_usage(user["id"], "calculation")
+    except ValueError as e:
+        raise HTTPException(status_code=429, detail=str(e))
+    try:
         result = calculate_npsha(**req.model_dump())
         return {
             "npsha_m": result.npsha_m,
@@ -74,6 +79,10 @@ class HeadLossRequest(BaseModel):
 
 @router.post("/head-loss")
 async def head_loss(req: HeadLossRequest, user: dict = Depends(get_current_user)):
+    try:
+        check_and_record_usage(user["id"], "calculation")
+    except ValueError as e:
+        raise HTTPException(status_code=429, detail=str(e))
     try:
         result = calculate_head_loss(**req.model_dump())
         return {
