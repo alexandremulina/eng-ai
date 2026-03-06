@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from app.services.units import convert_unit, ConversionError
 from app.services.npsh import calculate_npsha
 from app.services.head_loss import calculate_head_loss
+from app.core.auth import get_current_user
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
 
@@ -24,7 +25,7 @@ class ConvertResponse(BaseModel):
 
 
 @router.post("/convert", response_model=ConvertResponse)
-async def convert(req: ConvertRequest):
+async def convert(req: ConvertRequest, user: dict = Depends(get_current_user)):
     try:
         result = convert_unit(req.value, req.from_unit, req.to_unit, req.decimals)
         return ConvertResponse(
@@ -48,7 +49,7 @@ class NPSHRequest(BaseModel):
 
 
 @router.post("/npsh")
-async def npsh(req: NPSHRequest):
+async def npsh(req: NPSHRequest, user: dict = Depends(get_current_user)):
     try:
         result = calculate_npsha(**req.model_dump())
         return {
@@ -72,7 +73,7 @@ class HeadLossRequest(BaseModel):
 
 
 @router.post("/head-loss")
-async def head_loss(req: HeadLossRequest):
+async def head_loss(req: HeadLossRequest, user: dict = Depends(get_current_user)):
     try:
         result = calculate_head_loss(**req.model_dump())
         return {

@@ -30,7 +30,7 @@ def test_temperature_celsius_to_fahrenheit():
 
 
 @pytest.mark.asyncio
-async def test_convert_endpoint_success():
+async def test_convert_endpoint_success(mock_user):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/convert", json={
             "value": 100,
@@ -44,7 +44,7 @@ async def test_convert_endpoint_success():
 
 
 @pytest.mark.asyncio
-async def test_convert_endpoint_incompatible_units_returns_400():
+async def test_convert_endpoint_incompatible_units_returns_400(mock_user):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/convert", json={
             "value": 100,

@@ -107,7 +107,7 @@ def test_transitional_regime():
 
 
 @pytest.mark.asyncio
-async def test_head_loss_endpoint_basic():
+async def test_head_loss_endpoint_basic(mock_user):
     """POST /calculations/head-loss returns correct fields."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/head-loss", json={
@@ -129,7 +129,7 @@ async def test_head_loss_endpoint_basic():
 
 
 @pytest.mark.asyncio
-async def test_head_loss_endpoint_defaults():
+async def test_head_loss_endpoint_defaults(mock_user):
     """POST /calculations/head-loss uses sensible defaults for optional fields."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/head-loss", json={
@@ -143,7 +143,7 @@ async def test_head_loss_endpoint_defaults():
 
 
 @pytest.mark.asyncio
-async def test_head_loss_endpoint_invalid_flow_returns_422():
+async def test_head_loss_endpoint_invalid_flow_returns_422(mock_user):
     """Zero or negative flow should be rejected by Pydantic."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/head-loss", json={
@@ -155,7 +155,7 @@ async def test_head_loss_endpoint_invalid_flow_returns_422():
 
 
 @pytest.mark.asyncio
-async def test_head_loss_endpoint_invalid_diameter_returns_422():
+async def test_head_loss_endpoint_invalid_diameter_returns_422(mock_user):
     """Negative diameter should be rejected by Pydantic."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/head-loss", json={

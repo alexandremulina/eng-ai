@@ -93,7 +93,7 @@ def test_result_has_formula():
 
 
 @pytest.mark.asyncio
-async def test_npsh_endpoint_basic():
+async def test_npsh_endpoint_basic(mock_user):
     """POST /calculations/npsh returns correct NPSHa."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/npsh", json={
@@ -114,7 +114,7 @@ async def test_npsh_endpoint_basic():
 
 
 @pytest.mark.asyncio
-async def test_npsh_endpoint_invalid_density_returns_422():
+async def test_npsh_endpoint_invalid_density_returns_422(mock_user):
     """Negative density should be rejected by Pydantic field validation."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/npsh", json={
@@ -128,7 +128,7 @@ async def test_npsh_endpoint_invalid_density_returns_422():
 
 
 @pytest.mark.asyncio
-async def test_npsh_endpoint_with_npshr():
+async def test_npsh_endpoint_with_npshr(mock_user):
     """POST /calculations/npsh with npshr_m returns safety margin and cavitation flag."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/calculations/npsh", json={
