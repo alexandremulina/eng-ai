@@ -42,13 +42,13 @@ async def call_llm(
         return data["choices"][0]["message"]["content"]
 
 
-async def call_vision_llm(image_base64: str, prompt: str) -> str:
+async def call_vision_llm(image_base64: str, prompt: str, mime_type: str = "image/jpeg") -> str:
     """Call vision-capable model with image."""
     messages = [
         {
             "role": "user",
             "content": [
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}},
+                {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{image_base64}"}},
                 {"type": "text", "text": prompt},
             ],
         }

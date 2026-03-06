@@ -48,12 +48,11 @@ async def test_call_vision_llm_uses_vision_task():
     mock_call.assert_called_once()
     call_args = mock_call.call_args
     assert call_args[1]["task"] == "vision"
-    # Verify image is in the message
     messages = call_args[0][0]
-    assert any(
-        isinstance(part, dict) and part.get("type") == "image_url"
-        for part in messages[0]["content"]
-    )
+    image_parts = [p for p in messages[0]["content"] if isinstance(p, dict) and p.get("type") == "image_url"]
+    assert len(image_parts) == 1
+    assert "base64data" in image_parts[0]["image_url"]["url"]
+    assert "image/jpeg" in image_parts[0]["image_url"]["url"]  # default MIME type
 
 
 async def test_call_llm_raises_on_http_error():
