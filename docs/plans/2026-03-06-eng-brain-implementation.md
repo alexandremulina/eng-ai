@@ -4,9 +4,9 @@
 
 **Goal:** Build a mobile-first PWA for pump engineers with precision calculation engine, AI norm consulting (RAG), photo failure diagnosis, and SaaS billing.
 
-**Architecture:** Next.js 15 (App Router) frontend as PWA communicates with a FastAPI Python backend for all calculations and AI orchestration. Supabase handles auth, Postgres (with pgvector), and file storage. OpenRouter routes prompts to the best LLM per task.
+**Architecture:** Next.js 16 (App Router) frontend as PWA communicates with a FastAPI Python backend for all calculations and AI orchestration. Supabase handles auth, Postgres (with pgvector), and file storage. OpenRouter routes prompts to the best LLM per task.
 
-**Tech Stack:** Next.js 15, Tailwind, shadcn/ui, next-intl, FastAPI, Python 3.12, fluids, scipy, pint, LangChain, Supabase, OpenRouter, Stripe, Railway
+**Tech Stack:** Next.js 16, Tailwind, shadcn/ui, next-intl, FastAPI, Python 3.12, fluids, scipy, pint, LangChain, Supabase, OpenRouter, Stripe, Railway
 
 ---
 

@@ -4,7 +4,7 @@ Mobile-first PWA for pump engineers.
 
 ## Stack
 
-- **Frontend**: Next.js 15
+- **Frontend**: Next.js 16
 - **Backend**: FastAPI (Python)
 - **Database**: Supabase
 - **AI**: OpenRouter
@@ -19,7 +19,7 @@ cd apps/api
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### Web (Next.js)
