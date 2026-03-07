@@ -25,6 +25,7 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"Cast Iron": ("recommended", ""), "SS 316": ("recommended", ""), "Bronze": ("recommended", ""), "Duplex SS": ("recommended", "")},
         "shaft":           {"SS 316": ("recommended", ""), "Alloy 20": ("recommended", ""), "Carbon Steel": ("conditional", "use with coating")},
         "mechanical_seal": {"Carbon/SiC": ("recommended", ""), "Carbon/Ceramic": ("recommended", ""), "Viton": ("recommended", ""), "EPDM": ("recommended", "")},
+        "o_rings": {"Viton": ("recommended", ""), "EPDM": ("recommended", ""), "NBR": ("recommended", ""), "PTFE": ("recommended", "")},
     },
     "seawater": {
         "casing":          {"Cast Iron": ("conditional", "risk of corrosion without coating"), "SS 316": ("recommended", ""), "Bronze": ("recommended", ""), "Duplex SS": ("recommended", ""), "Super Duplex": ("recommended", "")},
@@ -32,6 +33,7 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"SS 316": ("conditional", ""), "Bronze": ("recommended", ""), "Super Duplex": ("recommended", "")},
         "shaft":           {"SS 316": ("conditional", "pitting risk"), "Duplex SS": ("recommended", ""), "Super Duplex": ("recommended", "")},
         "mechanical_seal": {"SiC/SiC": ("recommended", ""), "Carbon/SiC": ("recommended", ""), "Viton": ("recommended", ""), "EPDM": ("incompatible", "")},
+        "o_rings": {"Viton": ("recommended", ""), "EPDM": ("conditional", "check temp"), "NBR": ("conditional", "limited life"), "PTFE": ("recommended", "")},
     },
     "sulfuric_acid": {
         "casing":          {"Cast Iron": ("incompatible", ""), "SS 316": ("conditional", "< 5% or > 93% concentration"), "Alloy 20": ("recommended", ""), "Hastelloy C": ("recommended", ""), "PTFE-lined": ("recommended", "")},
@@ -39,6 +41,7 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"SS 316": ("conditional", ""), "Alloy 20": ("recommended", ""), "Hastelloy C": ("recommended", "")},
         "shaft":           {"SS 316": ("conditional", ""), "Alloy 20": ("recommended", ""), "Hastelloy C": ("recommended", "")},
         "mechanical_seal": {"SiC/SiC": ("recommended", ""), "Carbon/SiC": ("conditional", "< 60% conc"), "PTFE": ("recommended", ""), "Viton": ("incompatible", "")},
+        "o_rings": {"PTFE": ("recommended", ""), "Viton": ("conditional", "< 70% conc"), "EPDM": ("incompatible", ""), "NBR": ("incompatible", "")},
     },
     "hydrochloric_acid": {
         "casing":          {"Cast Iron": ("incompatible", ""), "SS 316": ("incompatible", ""), "Hastelloy C": ("recommended", ""), "Rubber-lined": ("recommended", ""), "PTFE-lined": ("recommended", "")},
@@ -46,6 +49,7 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"Hastelloy C": ("recommended", ""), "PTFE": ("recommended", "")},
         "shaft":           {"Hastelloy C": ("recommended", ""), "SS 316": ("incompatible", "")},
         "mechanical_seal": {"SiC/SiC": ("recommended", ""), "Carbon/SiC": ("incompatible", ""), "PTFE": ("recommended", ""), "Viton": ("incompatible", "")},
+        "o_rings": {"PTFE": ("recommended", ""), "Viton": ("incompatible", ""), "EPDM": ("incompatible", ""), "NBR": ("incompatible", "")},
     },
     "caustic_soda": {
         "casing":          {"Cast Iron": ("recommended", ""), "SS 316": ("recommended", ""), "Carbon Steel": ("recommended", "< 60°C"), "Duplex SS": ("recommended", "")},
@@ -53,6 +57,7 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"Cast Iron": ("recommended", ""), "SS 316": ("recommended", "")},
         "shaft":           {"SS 316": ("recommended", ""), "Carbon Steel": ("conditional", "")},
         "mechanical_seal": {"Carbon/SiC": ("recommended", ""), "SiC/SiC": ("recommended", ""), "EPDM": ("recommended", ""), "Viton": ("incompatible", "")},
+        "o_rings": {"EPDM": ("recommended", ""), "PTFE": ("recommended", ""), "Viton": ("incompatible", ""), "NBR": ("conditional", "< 40°C")},
     },
     "diesel": {
         "casing":          {"Cast Iron": ("recommended", ""), "Carbon Steel": ("recommended", ""), "SS 316": ("recommended", ""), "Bronze": ("recommended", "")},
@@ -60,10 +65,11 @@ _TABLE: dict[str, dict[str, dict[str, tuple[Rating, str]]]] = {
         "wear_ring":       {"Cast Iron": ("recommended", ""), "SS 316": ("recommended", ""), "Bronze": ("recommended", "")},
         "shaft":           {"Carbon Steel": ("recommended", ""), "SS 316": ("recommended", "")},
         "mechanical_seal": {"Carbon/SiC": ("recommended", ""), "Viton": ("recommended", ""), "NBR": ("recommended", ""), "EPDM": ("incompatible", "")},
+        "o_rings": {"Viton": ("recommended", ""), "NBR": ("recommended", ""), "EPDM": ("incompatible", ""), "PTFE": ("recommended", "")},
     },
 }
 
-COMPONENTS = ["casing", "impeller", "wear_ring", "shaft", "mechanical_seal"]
+COMPONENTS = ["casing", "impeller", "wear_ring", "shaft", "mechanical_seal", "o_rings"]
 
 
 def select_materials(

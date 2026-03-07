@@ -25,7 +25,7 @@ interface SelectionResult { fluid: string; components: ComponentResult[] }
 
 const COMPONENT_LABELS: Record<string, string> = {
   casing: "Casing", impeller: "Impeller", wear_ring: "Wear Ring",
-  shaft: "Shaft", mechanical_seal: "Mechanical Seal",
+  shaft: "Shaft", mechanical_seal: "Mechanical Seal", o_rings: "O-Rings",
 }
 
 export function MaterialSelectionForm() {
