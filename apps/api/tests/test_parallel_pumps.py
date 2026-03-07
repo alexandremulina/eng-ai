@@ -168,3 +168,37 @@ def test_combined_curve_points_returned():
     result = calculate_parallel_pumps(pumps=[pump_a, pump_b], system=system)
     assert len(result.combined_curve_points) > 5
     assert len(result.system_curve_points) > 5
+
+
+def test_input_validation_duplicate_q():
+    """Duplicate Q values should raise ValueError."""
+    with pytest.raises(ValueError, match="duplicate Q"):
+        calculate_parallel_pumps(
+            pumps=[PumpInput(
+                name="Dup",
+                points=[
+                    PumpCurvePoint(q=0, h=50),
+                    PumpCurvePoint(q=10, h=40),
+                    PumpCurvePoint(q=10, h=30),  # duplicate Q=10
+                ],
+                bep_q=10.0,
+            )],
+            system=SystemCurve(static_head=5.0, resistance=0.04),
+        )
+
+
+def test_input_validation_non_monotone_curve():
+    """Non-monotonically decreasing H-Q curve should raise ValueError."""
+    with pytest.raises(ValueError, match="monotonically decreasing"):
+        calculate_parallel_pumps(
+            pumps=[PumpInput(
+                name="Hump",
+                points=[
+                    PumpCurvePoint(q=0, h=40),
+                    PumpCurvePoint(q=10, h=50),  # H increases — invalid
+                    PumpCurvePoint(q=20, h=30),
+                ],
+                bep_q=10.0,
+            )],
+            system=SystemCurve(static_head=5.0, resistance=0.04),
+        )
