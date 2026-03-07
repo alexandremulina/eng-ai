@@ -32,7 +32,7 @@ npm run dev
 
 ## Supabase Setup
 
-Run the following SQL in the Supabase SQL editor for your project:
+Run the following SQL in the Supabase SQL editor for your project before deploying:
 
 ### Enable pgvector
 ```sql
@@ -71,3 +71,29 @@ begin
 end;
 $$;
 ```
+
+## Deployment
+
+### API (Railway)
+
+1. Create a new Railway project
+2. Connect your GitHub repo
+3. Set service root directory to `apps/api`
+4. Add environment variables in Railway dashboard:
+   - `OPENROUTER_API_KEY`
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `STRIPE_WEBHOOK_SECRET`
+   - `ENVIRONMENT=production`
+5. Railway auto-detects via `railway.toml`
+
+### Web (Vercel)
+
+1. Import project from GitHub at vercel.com
+2. Set root directory to `apps/web`
+3. Add environment variables:
+   - `NEXT_PUBLIC_API_URL` → Your Railway API URL
+   - `NEXT_PUBLIC_SUPABASE_URL` → Your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` → Your Supabase anon/publishable key
+4. Deploy
