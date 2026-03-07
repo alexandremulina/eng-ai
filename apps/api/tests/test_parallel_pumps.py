@@ -104,9 +104,9 @@ def test_zero_contribution_pump_alert():
     result = calculate_parallel_pumps(pumps=[strong_pump, weak_pump], system=system)
 
     pump_results = {p.name: p for p in result.pumps}
-    # Operating H will be >> 20m, so Weak pump Q=0 -> bep_ratio=0 -> off_curve
+    # Operating H will be >> 20m (Weak pump's h_max), so Weak pump gets reverse_flow alert
     assert "Weak" in pump_results
-    assert pump_results["Weak"].alert in ("off_curve", "reverse_flow")
+    assert pump_results["Weak"].alert == "reverse_flow"
 
 
 def test_input_validation_too_few_points():

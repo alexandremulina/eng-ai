@@ -151,7 +151,8 @@ def calculate_parallel_pumps(
         q_i = q_of_h(h_op)
         bep_ratio = (q_i / pump.bep_q) if (pump.bep_q and pump.bep_q > 0) else None
         alert: PumpAlert = None
-        if q_i < 0:
+        h_max_i = max(p.h for p in pump.points)
+        if h_op >= h_max_i:
             alert = "reverse_flow"
         elif bep_ratio is not None and (bep_ratio < 0.8 or bep_ratio > 1.2):
             alert = "off_curve"

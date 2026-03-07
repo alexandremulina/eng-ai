@@ -115,7 +115,7 @@ class PumpCurvePointModel(BaseModel):
 
 class PumpInputModel(BaseModel):
     name: str
-    points: list[PumpCurvePointModel] = Field(..., min_length=1)
+    points: list[PumpCurvePointModel] = Field(..., min_length=3)
     bep_q: float | None = Field(default=None, gt=0)
 
 
@@ -251,9 +251,16 @@ async def extract_pump_curve(
     file: UploadFile = File(...),
     user: dict = Depends(get_current_user),
 ):
+    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+    ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"}
+
     content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=413, detail="File too large. Maximum size is 10 MB.")
+    mime = file.content_type or "image/jpeg"
+    if mime not in ALLOWED_MIME_TYPES:
+        raise HTTPException(status_code=415, detail=f"Unsupported file type '{mime}'. Allowed: image/jpeg, image/png, image/webp, image/gif, application/pdf.")
     b64 = base64.b64encode(content).decode()
-    mime = file.content_type or "image/png"
 
     try:
         raw = await call_vision_llm(b64, CURVE_EXTRACTION_PROMPT, mime_type=mime)
