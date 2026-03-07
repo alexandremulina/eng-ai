@@ -102,21 +102,11 @@ export function ParallelPumpsForm() {
     }
   }
 
-  // Build chart data: merge all curves by index
-  const chartData = result ? (() => {
-    const points: Record<string, number>[] = result.combined_curve_points.map(pt => ({
-      q: pt.q, "Combined": pt.h,
-    }))
-    result.system_curve_points.forEach((pt, i) => {
-      if (points[i]) points[i]["System"] = pt.h
-    })
-    result.individual_curve_points.forEach((curve, ci) => {
-      curve.forEach((pt, i) => {
-        if (points[i]) points[i][result.pumps[ci]?.name ?? `Pump ${ci + 1}`] = pt.h
-      })
-    })
-    return points
-  })() : []
+  const combinedData = result ? result.combined_curve_points.map(pt => ({ q: pt.q, h: pt.h })) : []
+  const systemData = result ? result.system_curve_points.map(pt => ({ q: pt.q, h: pt.h })) : []
+  const individualData = result ? result.individual_curve_points.map(curve =>
+    curve.map(pt => ({ q: pt.q, h: pt.h }))
+  ) : []
 
   const ALERT_LABEL: Record<string, string> = {
     off_curve: "Off BEP", reverse_flow: "Reverse Flow",
@@ -309,19 +299,19 @@ export function ParallelPumpsForm() {
           <div className="rounded-lg border border-white/10 p-4" style={{ backgroundColor: "#1A1D27" }}>
             <h3 className="text-sm font-semibold text-white mb-4">Performance Curves</h3>
             <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <LineChart margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="q" stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "Q (m³/h)", position: "insideBottom", offset: -2, fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
-                <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "H (m)", angle: -90, position: "insideLeft", fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
-                <Tooltip contentStyle={{ backgroundColor: "#1A1D27", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} labelStyle={{ color: "rgba(255,255,255,0.6)" }} itemStyle={{ color: "rgba(255,255,255,0.8)" }} />
+                <XAxis dataKey="q" type="number" domain={["auto", "auto"]} stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "Q (m³/h)", position: "insideBottom", offset: -2, fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
+                <YAxis dataKey="h" type="number" domain={["auto", "auto"]} stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "H (m)", angle: -90, position: "insideLeft", fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
+                <Tooltip contentStyle={{ backgroundColor: "#1A1D27", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} labelStyle={{ color: "rgba(255,255,255,0.6)" }} itemStyle={{ color: "rgba(255,255,255,0.8)" }} formatter={(value: number) => [`${value.toFixed(1)} m`, undefined]} labelFormatter={(q: number) => `Q = ${Number(q).toFixed(1)} m³/h`} />
                 <Legend wrapperStyle={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }} />
-                {result.pumps.map((p, i) => (
-                  <Line key={p.name} type="monotone" dataKey={p.name} stroke={PUMP_COLORS[i]} strokeWidth={1.5} dot={false} strokeDasharray="4 2" />
+                {result && individualData.map((curve, i) => (
+                  <Line key={result.pumps[i]?.name ?? `Pump ${i+1}`} data={curve} type="monotone" dataKey="h" name={result.pumps[i]?.name ?? `Pump ${i+1}`} stroke={PUMP_COLORS[i]} strokeWidth={1.5} dot={false} strokeDasharray="4 2" />
                 ))}
-                <Line type="monotone" dataKey="Combined" stroke="#FFFFFF" strokeWidth={2.5} dot={false} />
-                <Line type="monotone" dataKey="System" stroke="#FF6B35" strokeWidth={2} dot={false} />
-                <ReferenceLine x={result.operating_point.q_total} stroke="rgba(255,255,255,0.3)" strokeDasharray="3 3" />
-                <ReferenceLine y={result.operating_point.h} stroke="rgba(255,255,255,0.3)" strokeDasharray="3 3" />
+                {result && <Line data={combinedData} type="monotone" dataKey="h" name="Combined" stroke="#FFFFFF" strokeWidth={2.5} dot={false} />}
+                {result && <Line data={systemData} type="monotone" dataKey="h" name="System" stroke="#FF6B35" strokeWidth={2} dot={false} />}
+                {result && <ReferenceLine x={result.operating_point.q_total} stroke="rgba(255,255,255,0.3)" strokeDasharray="3 3" />}
+                {result && <ReferenceLine y={result.operating_point.h} stroke="rgba(255,255,255,0.3)" strokeDasharray="3 3" />}
               </LineChart>
             </ResponsiveContainer>
           </div>

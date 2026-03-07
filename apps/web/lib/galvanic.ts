@@ -46,6 +46,15 @@ export function checkGalvanicCompatibility(mat1: string, mat2: string): Galvanic
     throw new Error("Unknown material")
   }
   const diff = Math.abs(v1 - v2)
+  if (diff === 0) {
+    return {
+      anode: mat1,
+      cathode: mat2,
+      potential_mv: 0,
+      risk: "low",
+      recommendation: "Compatible — same galvanic potential, no corrosion risk.",
+    }
+  }
   const anode = v1 < v2 ? mat1 : mat2
   const cathode = v1 < v2 ? mat2 : mat1
 
