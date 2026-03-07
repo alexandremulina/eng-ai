@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "calc": "Calc",
+    "norms": "Norms",
+    "diagnosis": "Diagnosis",
+    "account": "Account"
+  },
+  "calc": {
+    "title": "Calculators",
+    "npsh": {
+      "title": "NPSH Calculator",
+      "subtitle": "Net Positive Suction Head available",
+      "result": "NPSHa Result",
+      "safe": "Safe",
+      "risk": "Cavitation Risk",
+      "calculate": "Calculate NPSHa",
+      "calculating": "Calculating..."
+    },
+    "headLoss": {
+      "title": "Head Loss",
+      "description": "Darcy-Weisbach friction losses in piping"
+    },
+    "convert": {
+      "title": "Unit Converter",
+      "description": "GPM, bar, kPa, m³/h and more"
+    }
+  },
+  "norms": {
+    "title": "Norm Consultant",
+    "placeholder": "Ask about API 610, ASME, ISO standards..."
+  },
+  "diagnosis": {
+    "title": "Photo Diagnosis",
+    "upload": "Upload component photo",
+    "analyze": "Analyze"
+  },
+  "account": {
+    "title": "Account",
+    "plan": "Plan",
+    "upgrade": "Upgrade to Pro",
+    "signOut": "Sign Out"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel"
+  }
+}

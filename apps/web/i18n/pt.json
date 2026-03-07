@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "calc": "Cálculo",
+    "norms": "Normas",
+    "diagnosis": "Diagnóstico",
+    "account": "Conta"
+  },
+  "calc": {
+    "title": "Calculadoras",
+    "npsh": {
+      "title": "Calculadora NPSH",
+      "subtitle": "NPSH disponível",
+      "result": "Resultado NPSHd",
+      "safe": "Seguro",
+      "risk": "Risco de Cavitação",
+      "calculate": "Calcular NPSHd",
+      "calculating": "Calculando..."
+    },
+    "headLoss": {
+      "title": "Perda de Carga",
+      "description": "Perda de carga Darcy-Weisbach em tubulações"
+    },
+    "convert": {
+      "title": "Conversor de Unidades",
+      "description": "GPM, bar, kPa, m³/h e mais"
+    }
+  },
+  "norms": {
+    "title": "Consultor de Normas",
+    "placeholder": "Pergunte sobre API 610, ASME, ISO..."
+  },
+  "diagnosis": {
+    "title": "Diagnóstico por Foto",
+    "upload": "Enviar foto do componente",
+    "analyze": "Analisar"
+  },
+  "account": {
+    "title": "Conta",
+    "plan": "Plano",
+    "upgrade": "Upgrade para Pro",
+    "signOut": "Sair"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "back": "Voltar",
+    "save": "Salvar",
+    "cancel": "Cancelar"
+  }
+}

@@ -1,11 +1,10 @@
-import type { NextConfig } from "next";
-import withPWA from "@ducanh2912/next-pwa";
+import type { NextConfig } from "next"
+import withPWA from "@ducanh2912/next-pwa"
+import createNextIntlPlugin from "next-intl/plugin"
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts")
 
-export default withPWA({
+const withPWAConfig = withPWA({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
   register: true,
@@ -24,4 +23,8 @@ export default withPWA({
       },
     ],
   },
-})(nextConfig);
+})
+
+const nextConfig: NextConfig = {}
+
+export default withNextIntl(withPWAConfig(nextConfig))
