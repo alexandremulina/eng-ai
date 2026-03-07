@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-brand: oklch(0.5 0.2 250);
+  --color-success: oklch(0.75 0.2 145);
+  --surface: #0F1117;
+  --surface-secondary: #1A1D27;
 }
 
 @theme inline {
@@ -10,6 +14,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-brand: var(--color-brand);
+  --color-success: var(--color-success);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
 }
 
 @media (prefers-color-scheme: dark) {
