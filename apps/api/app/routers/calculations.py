@@ -17,6 +17,7 @@ from app.services.parallel_pumps import (
     SystemCurve as SvcSystemCurve,
     PumpInput as SvcPumpInput,
 )
+from app.services.material_selection import select_materials
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
 
@@ -199,6 +200,37 @@ async def bolt_torque(req: BoltTorqueRequest, user: dict = Depends(get_current_u
             "preload_kn": result.preload_kn,
             "torque_nm": result.torque_nm,
             "torque_ftlb": result.torque_ftlb,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class MaterialSelectionRequest(BaseModel):
+    fluid: str
+    concentration_pct: float = Field(default=100.0, ge=0, le=100)
+    temp_c: float = Field(default=25.0)
+
+
+@router.post("/material-selection")
+async def material_selection(req: MaterialSelectionRequest, user: dict = Depends(get_current_user)):
+    try:
+        check_and_record_usage(user["id"], "calculation")
+    except ValueError as e:
+        raise HTTPException(status_code=429, detail=str(e))
+    try:
+        result = select_materials(req.fluid, req.concentration_pct, req.temp_c)
+        return {
+            "fluid": req.fluid,
+            "components": [
+                {
+                    "component": c.component,
+                    "materials": [
+                        {"material": m.material, "rating": m.rating, "note": m.note}
+                        for m in c.materials
+                    ],
+                }
+                for c in result
+            ],
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
