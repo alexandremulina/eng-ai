@@ -8,6 +8,7 @@ from app.services.units import convert_unit, ConversionError
 from app.services.npsh import calculate_npsha
 from app.services.head_loss import calculate_head_loss
 from app.services.usage import check_and_record_usage
+from app.services.bolt_torque import calculate_bolt_torque
 from app.core.auth import get_current_user
 from app.services.ai import call_vision_llm
 from app.services.parallel_pumps import (
@@ -171,6 +172,33 @@ async def parallel_pumps(req: ParallelPumpsRequest, user: dict = Depends(get_cur
                 [{"q": pt.q, "h": pt.h} for pt in curve]
                 for curve in result.individual_curve_points
             ],
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class BoltTorqueRequest(BaseModel):
+    grade: str
+    diameter_mm: float = Field(..., gt=0, le=100)
+    condition: str = Field(default="dry")
+
+
+@router.post("/bolt-torque")
+async def bolt_torque(req: BoltTorqueRequest, user: dict = Depends(get_current_user)):
+    try:
+        check_and_record_usage(user["id"], "calculation")
+    except ValueError as e:
+        raise HTTPException(status_code=429, detail=str(e))
+    try:
+        result = calculate_bolt_torque(req.grade, req.diameter_mm, req.condition)
+        return {
+            "grade": result.grade,
+            "diameter_mm": result.diameter_mm,
+            "condition": result.condition,
+            "proof_load_mpa": result.proof_load_mpa,
+            "preload_kn": result.preload_kn,
+            "torque_nm": result.torque_nm,
+            "torque_ftlb": result.torque_ftlb,
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
