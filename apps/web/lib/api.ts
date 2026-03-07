@@ -44,6 +44,19 @@ export const api = {
       // Don't set Content-Type for multipart — browser sets it with boundary
       headers: {},
     }),
+  parallelPumps: (body: object, token: string) =>
+    apiFetch("/calculations/parallel-pumps", { method: "POST", body: JSON.stringify(body), token }),
+  extractPumpCurve: (formData: FormData, token: string) =>
+    apiFetch("/calculations/extract-pump-curve", {
+      method: "POST",
+      body: formData,
+      token,
+      headers: {},
+    }),
+  boltTorque: (body: object, token: string) =>
+    apiFetch("/calculations/bolt-torque", { method: "POST", body: JSON.stringify(body), token }),
+  materialSelection: (body: object, token: string) =>
+    apiFetch("/calculations/material-selection", { method: "POST", body: JSON.stringify(body), token }),
 }
 
 export { ApiError }
