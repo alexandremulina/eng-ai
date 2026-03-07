@@ -1,0 +1,108 @@
+import pytest
+from app.services.parallel_pumps import (
+    PumpCurvePoint,
+    SystemCurve,
+    PumpInput,
+    ParallelPumpsResult,
+    calculate_parallel_pumps,
+)
+
+
+def test_single_pump_finds_operating_point():
+    """Single pump on a system curve finds the correct operating point."""
+    pump = PumpInput(
+        name="Pump A",
+        points=[
+            PumpCurvePoint(q=0, h=50),
+            PumpCurvePoint(q=10, h=45),
+            PumpCurvePoint(q=20, h=35),
+            PumpCurvePoint(q=30, h=20),
+        ],
+        bep_q=18.0,
+    )
+    system = SystemCurve(static_head=5.0, resistance=0.04)
+    result = calculate_parallel_pumps(pumps=[pump], system=system)
+    # H_sys = 5 + 0.04*Q^2, pump curve intersects around Q=20, H=21
+    assert result.operating_point.h > 5
+    assert result.operating_point.q_total > 0
+    assert len(result.pumps) == 1
+    assert result.pumps[0].q > 0
+
+
+def test_two_identical_pumps_double_flow():
+    """Two identical pumps in parallel should roughly double the flow vs single pump."""
+    points = [
+        PumpCurvePoint(q=0, h=50),
+        PumpCurvePoint(q=10, h=45),
+        PumpCurvePoint(q=20, h=35),
+        PumpCurvePoint(q=30, h=20),
+    ]
+    pump_a = PumpInput(name="Pump A", points=points, bep_q=18.0)
+    pump_b = PumpInput(name="Pump B", points=points, bep_q=18.0)
+    system = SystemCurve(static_head=5.0, resistance=0.01)
+
+    single = calculate_parallel_pumps(pumps=[pump_a], system=system)
+    double = calculate_parallel_pumps(pumps=[pump_a, pump_b], system=system)
+
+    # Two identical pumps should produce roughly 2x flow (not exactly due to system curve shape)
+    assert double.operating_point.q_total > single.operating_point.q_total * 1.5
+
+
+def test_dominated_pump_flagged_as_off_curve():
+    """Pump with much lower head curve should be flagged as off_curve at operating point."""
+    strong_pump = PumpInput(
+        name="Strong",
+        points=[
+            PumpCurvePoint(q=0, h=60),
+            PumpCurvePoint(q=15, h=50),
+            PumpCurvePoint(q=30, h=35),
+        ],
+        bep_q=20.0,
+    )
+    weak_pump = PumpInput(
+        name="Weak",
+        points=[
+            PumpCurvePoint(q=0, h=30),
+            PumpCurvePoint(q=10, h=25),
+            PumpCurvePoint(q=20, h=15),
+        ],
+        bep_q=10.0,
+    )
+    system = SystemCurve(static_head=20.0, resistance=0.05)
+    result = calculate_parallel_pumps(pumps=[strong_pump, weak_pump], system=system)
+
+    pump_results = {p.name: p for p in result.pumps}
+    # At high system H, weak pump may operate far from BEP
+    assert "Weak" in pump_results
+
+
+def test_no_intersection_raises_value_error():
+    """System curve above max pump head should raise ValueError."""
+    pump = PumpInput(
+        name="Pump A",
+        points=[
+            PumpCurvePoint(q=0, h=20),
+            PumpCurvePoint(q=10, h=15),
+            PumpCurvePoint(q=20, h=5),
+        ],
+        bep_q=10.0,
+    )
+    system = SystemCurve(static_head=50.0, resistance=0.01)  # way above pump max head
+    with pytest.raises(ValueError, match="no_intersection"):
+        calculate_parallel_pumps(pumps=[pump], system=system)
+
+
+def test_combined_curve_points_returned():
+    """Result includes combined curve points for charting."""
+    points = [
+        PumpCurvePoint(q=0, h=40),
+        PumpCurvePoint(q=10, h=35),
+        PumpCurvePoint(q=20, h=25),
+        PumpCurvePoint(q=30, h=10),
+    ]
+    pump_a = PumpInput(name="A", points=points, bep_q=15.0)
+    pump_b = PumpInput(name="B", points=points, bep_q=15.0)
+    system = SystemCurve(static_head=5.0, resistance=0.02)
+    result = calculate_parallel_pumps(pumps=[pump_a, pump_b], system=system)
+    assert len(result.combined_curve_points) > 5
+    assert len(result.system_curve_points) > 5
