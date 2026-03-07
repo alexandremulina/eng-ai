@@ -2,10 +2,40 @@ import Link from "next/link"
 
 const CALCULATORS = [
   {
+    href: "/calc/parallel-pumps",
+    title: "Parallel Pump Association",
+    description: "Operating point for multiple pumps in parallel — including different models",
+    badge: "New",
+  },
+  {
     href: "/calc/npsh",
     title: "NPSH Calculator",
     description: "Net Positive Suction Head — prevent cavitation",
     badge: "Essential",
+  },
+  {
+    href: "/calc/material-selection",
+    title: "Material Selection",
+    description: "Compatible materials by fluid, concentration and temperature",
+    badge: "New",
+  },
+  {
+    href: "/calc/galvanic",
+    title: "Galvanic Corrosion Check",
+    description: "Assess compatibility between two materials in contact",
+    badge: "New",
+  },
+  {
+    href: "/calc/bolt-torque",
+    title: "Bolt Torque Calculator",
+    description: "Tightening torque and preload by grade, diameter and condition",
+    badge: "New",
+  },
+  {
+    href: "/calc/flanges",
+    title: "ASME B16.5 Flanges",
+    description: "Flange dimensions by NPS and pressure class",
+    badge: "New",
   },
   {
     href: "/calc/head-loss",
