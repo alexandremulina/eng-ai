@@ -51,6 +51,11 @@ async def test_bolt_torque_endpoint(mock_user):
     assert data["proof_load_mpa"] == 862
 
 
+def test_unknown_condition_raises():
+    with pytest.raises(ValueError, match="Unknown condition"):
+        calculate_bolt_torque(grade="ISO 8.8", diameter_mm=16.0, condition="oily")
+
+
 @pytest.mark.asyncio
 async def test_bolt_torque_endpoint_unknown_grade_returns_400(mock_user):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:

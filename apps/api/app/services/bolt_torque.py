@@ -43,7 +43,8 @@ TENSILE_STRESS_AREA: dict[float, float] = {
 @dataclass
 class BoltTorqueResult:
     grade: str
-    diameter_mm: float
+    diameter_mm: float       # as requested by user
+    diameter_used_mm: float  # actual standard size used (nearest in table)
     condition: str
     proof_load_mpa: float
     preload_kn: float
@@ -78,6 +79,7 @@ def calculate_bolt_torque(
     return BoltTorqueResult(
         grade=grade,
         diameter_mm=diameter_mm,
+        diameter_used_mm=closest,
         condition=condition,
         proof_load_mpa=proof_mpa,
         preload_kn=round(preload_kn, 2),
