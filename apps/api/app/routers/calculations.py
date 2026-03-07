@@ -198,6 +198,7 @@ async def bolt_torque(req: BoltTorqueRequest, user: dict = Depends(get_current_u
             "diameter_used_mm": result.diameter_used_mm,
             "condition": result.condition,
             "proof_load_mpa": result.proof_load_mpa,
+            "shear_strength_mpa": result.shear_strength_mpa,
             "preload_kn": result.preload_kn,
             "torque_nm": result.torque_nm,
             "torque_ftlb": result.torque_ftlb,

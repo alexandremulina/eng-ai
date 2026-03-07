@@ -47,6 +47,7 @@ class BoltTorqueResult:
     diameter_used_mm: float  # actual standard size used (nearest in table)
     condition: str
     proof_load_mpa: float
+    shear_strength_mpa: float
     preload_kn: float
     torque_nm: float
     torque_ftlb: float
@@ -67,8 +68,11 @@ def calculate_bolt_torque(
     stress_area_mm2 = TENSILE_STRESS_AREA[closest]
 
     proof_mpa = GRADE_DATA[grade]["proof_mpa"]
+    tensile_mpa = GRADE_DATA[grade]["tensile_mpa"]
     k = NUT_FACTOR[condition]
     d_m = diameter_mm / 1000
+
+    shear_strength_mpa = round(tensile_mpa * 0.577, 1)
 
     preload_n = 0.75 * proof_mpa * 1e6 * (stress_area_mm2 * 1e-6)
     preload_kn = preload_n / 1000
@@ -82,6 +86,7 @@ def calculate_bolt_torque(
         diameter_used_mm=closest,
         condition=condition,
         proof_load_mpa=proof_mpa,
+        shear_strength_mpa=shear_strength_mpa,
         preload_kn=round(preload_kn, 2),
         torque_nm=round(torque_nm, 1),
         torque_ftlb=round(torque_ftlb, 1),

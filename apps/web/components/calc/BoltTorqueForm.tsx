@@ -13,6 +13,7 @@ interface BoltResult {
   diameter_mm: number
   condition: string
   proof_load_mpa: number
+  shear_strength_mpa: number
   preload_kn: number
   torque_nm: number
   torque_ftlb: number
@@ -74,7 +75,7 @@ export function BoltTorqueForm() {
           <h3 className="text-base font-semibold text-white">Result — {result.grade} M{result.diameter_mm} ({result.condition})</h3>
           <div className="text-4xl font-bold text-blue-400">{result.torque_nm} N·m</div>
           <p className="text-sm text-white/50">{result.torque_ftlb} ft·lb</p>
-          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 text-sm">
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/10 text-sm">
             <div>
               <p className="text-white/40">Preload Force</p>
               <p className="text-white font-medium">{result.preload_kn} kN</p>
@@ -82,6 +83,10 @@ export function BoltTorqueForm() {
             <div>
               <p className="text-white/40">Proof Load</p>
               <p className="text-white font-medium">{result.proof_load_mpa} MPa</p>
+            </div>
+            <div>
+              <p className="text-white/40">Shear Strength</p>
+              <p className="text-white font-medium">{result.shear_strength_mpa} MPa</p>
             </div>
           </div>
         </div>

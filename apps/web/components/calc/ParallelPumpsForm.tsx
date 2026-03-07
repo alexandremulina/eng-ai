@@ -227,6 +227,29 @@ export function ParallelPumpsForm() {
       {/* Results */}
       {result && (
         <div className="space-y-4">
+          {/* Alert banners */}
+          {result.pumps.some(p => p.alert === "reverse_flow") && (
+            <div className="rounded-lg border border-red-500/50 bg-red-900/20 p-3 flex items-start gap-2">
+              <span className="text-red-400 font-bold text-sm mt-0.5">⚠</span>
+              <div>
+                <p className="text-red-400 font-semibold text-sm">Reverse Flow Detected</p>
+                <p className="text-red-300/70 text-xs mt-0.5">
+                  {result.pumps.filter(p => p.alert === "reverse_flow").map(p => p.name).join(", ")} must be isolated — operating head exceeds this pump's shutoff head.
+                </p>
+              </div>
+            </div>
+          )}
+          {result.pumps.some(p => p.alert === "off_curve") && (
+            <div className="rounded-lg border border-yellow-500/50 bg-yellow-900/20 p-3 flex items-start gap-2">
+              <span className="text-yellow-400 font-bold text-sm mt-0.5">⚠</span>
+              <div>
+                <p className="text-yellow-400 font-semibold text-sm">Off Best Efficiency Point</p>
+                <p className="text-yellow-300/70 text-xs mt-0.5">
+                  {result.pumps.filter(p => p.alert === "off_curve").map(p => p.name).join(", ")} operating outside BEP ±20%. Check for vibration, wear, or overheating.
+                </p>
+              </div>
+            </div>
+          )}
           {/* Operating point */}
           <div className="rounded-lg border border-white/10 p-4" style={{ backgroundColor: "#1A1D27" }}>
             <h3 className="text-sm font-semibold text-white mb-3">System Operating Point</h3>
