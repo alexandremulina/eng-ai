@@ -3,8 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --color-brand: oklch(0.5 0.2 250);
-  --color-success: oklch(0.75 0.2 145);
+  --color-brand: #0066FF;
+  --color-brand-foreground: #ffffff;
+  --color-success: #00C853;
   --surface: #0F1117;
   --surface-secondary: #1A1D27;
 }
@@ -12,19 +13,17 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-brand: var(--color-brand);
+  --color-brand-foreground: var(--color-brand-foreground);
   --color-success: var(--color-success);
   --color-surface: var(--surface);
   --color-surface-secondary: var(--surface-secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.dark,
+html[data-theme="dark"] {
+  --background: #0F1117;
+  --foreground: #ffffff;
 }
 
 body {
