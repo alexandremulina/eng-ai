@@ -199,7 +199,14 @@ async def extract_pump_curve(
         points = json.loads(raw)
         if not isinstance(points, list) or len(points) < 3:
             raise ValueError("Too few points extracted")
-        validated = [{"q": float(p["q"]), "h": float(p["h"])} for p in points]
+        validated = []
+        for i, p in enumerate(points):
+            if "q" not in p or "h" not in p:
+                raise ValueError(f"Point at index {i} missing required field 'q' or 'h'")
+            try:
+                validated.append({"q": float(p["q"]), "h": float(p["h"])})
+            except (TypeError, ValueError):
+                raise ValueError(f"Point at index {i}: 'q' and 'h' must be numeric")
         return {"points": validated}
     except (json.JSONDecodeError, KeyError, ValueError) as e:
         raise HTTPException(status_code=400, detail=f"Could not extract curve: {e}")

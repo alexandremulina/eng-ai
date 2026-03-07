@@ -49,3 +49,18 @@ async def test_extract_curve_strips_markdown_fences(mock_user):
     assert response.status_code == 200
     data = response.json()
     assert len(data["points"]) == 3
+
+
+@pytest.mark.asyncio
+async def test_extract_curve_too_few_points_returns_400(mock_user):
+    """LLM returning fewer than 3 points should return 400."""
+    too_few = '[{"q": 0, "h": 50}, {"q": 10, "h": 40}]'  # only 2 points
+
+    with patch("app.routers.calculations.call_vision_llm", new_callable=AsyncMock, return_value=too_few):
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            response = await client.post(
+                "/calculations/extract-pump-curve",
+                files={"file": ("curve.png", b"fake-image-bytes", "image/png")},
+            )
+    assert response.status_code == 400
+    assert "Could not extract curve" in response.json()["detail"]
