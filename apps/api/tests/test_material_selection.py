@@ -23,6 +23,8 @@ def test_returns_all_components():
     components = {r.component for r in result}
     assert "casing" in components
     assert "impeller" in components
+    assert "wear_ring" in components
+    assert "shaft" in components
     assert "mechanical_seal" in components
 
 
