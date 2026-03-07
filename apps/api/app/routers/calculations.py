@@ -7,6 +7,12 @@ from app.services.npsh import calculate_npsha
 from app.services.head_loss import calculate_head_loss
 from app.services.usage import check_and_record_usage
 from app.core.auth import get_current_user
+from app.services.parallel_pumps import (
+    calculate_parallel_pumps,
+    PumpCurvePoint as SvcPumpCurvePoint,
+    SystemCurve as SvcSystemCurve,
+    PumpInput as SvcPumpInput,
+)
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
 
@@ -92,6 +98,76 @@ async def head_loss(req: HeadLossRequest, user: dict = Depends(get_current_user)
             "friction_factor": result.friction_factor,
             "flow_regime": result.flow_regime,
             "formula": result.formula,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class PumpCurvePointModel(BaseModel):
+    q: float = Field(..., ge=0, description="Flow rate (m³/h)")
+    h: float = Field(..., ge=0, description="Head (m)")
+
+
+class PumpInputModel(BaseModel):
+    name: str
+    points: list[PumpCurvePointModel] = Field(..., min_length=1)
+    bep_q: float | None = Field(default=None, gt=0)
+
+
+class SystemCurveModel(BaseModel):
+    static_head: float = Field(..., ge=0, description="Static head (m)")
+    resistance: float = Field(..., ge=0, description="System resistance R — H = H_static + R*Q²")
+
+
+class ParallelPumpsRequest(BaseModel):
+    pumps: list[PumpInputModel] = Field(..., min_length=1, max_length=4)
+    system_curve: SystemCurveModel
+
+
+@router.post("/parallel-pumps")
+async def parallel_pumps(req: ParallelPumpsRequest, user: dict = Depends(get_current_user)):
+    try:
+        check_and_record_usage(user["id"], "calculation")
+    except ValueError as e:
+        raise HTTPException(status_code=429, detail=str(e))
+    try:
+        result = calculate_parallel_pumps(
+            pumps=[
+                SvcPumpInput(
+                    name=p.name,
+                    points=[SvcPumpCurvePoint(q=pt.q, h=pt.h) for pt in p.points],
+                    bep_q=p.bep_q,
+                )
+                for p in req.pumps
+            ],
+            system=SvcSystemCurve(
+                static_head=req.system_curve.static_head,
+                resistance=req.system_curve.resistance,
+            ),
+        )
+        return {
+            "operating_point": {
+                "q_total": result.operating_point.q_total,
+                "h": result.operating_point.h,
+                "unit_q": "m3/h",
+                "unit_h": "m",
+            },
+            "pumps": [
+                {
+                    "name": p.name,
+                    "q": p.q,
+                    "h": p.h,
+                    "bep_ratio": p.bep_ratio,
+                    "alert": p.alert,
+                }
+                for p in result.pumps
+            ],
+            "combined_curve_points": [{"q": pt.q, "h": pt.h} for pt in result.combined_curve_points],
+            "system_curve_points": [{"q": pt.q, "h": pt.h} for pt in result.system_curve_points],
+            "individual_curve_points": [
+                [{"q": pt.q, "h": pt.h} for pt in curve]
+                for curve in result.individual_curve_points
+            ],
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
