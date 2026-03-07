@@ -49,31 +49,93 @@ def test_two_identical_pumps_double_flow():
 
 
 def test_dominated_pump_flagged_as_off_curve():
-    """Pump with much lower head curve should be flagged as off_curve at operating point."""
+    """Pump operating far outside BEP should be flagged as off_curve."""
+    # Strong pump: high shutoff, steep drop — will dominate system at high H
     strong_pump = PumpInput(
         name="Strong",
         points=[
-            PumpCurvePoint(q=0, h=60),
-            PumpCurvePoint(q=15, h=50),
-            PumpCurvePoint(q=30, h=35),
+            PumpCurvePoint(q=0, h=80),
+            PumpCurvePoint(q=15, h=65),
+            PumpCurvePoint(q=30, h=40),
         ],
-        bep_q=20.0,
+        bep_q=25.0,
     )
+    # Weak pump: low shutoff, bep_q=2 so at operating point Q >> bep_q -> off_curve
     weak_pump = PumpInput(
         name="Weak",
         points=[
-            PumpCurvePoint(q=0, h=30),
-            PumpCurvePoint(q=10, h=25),
-            PumpCurvePoint(q=20, h=15),
+            PumpCurvePoint(q=0, h=50),
+            PumpCurvePoint(q=10, h=42),
+            PumpCurvePoint(q=20, h=28),
         ],
-        bep_q=10.0,
+        bep_q=2.0,  # very low BEP so ratio will be >> 1.2
     )
-    system = SystemCurve(static_head=20.0, resistance=0.05)
+    system = SystemCurve(static_head=5.0, resistance=0.02)
     result = calculate_parallel_pumps(pumps=[strong_pump, weak_pump], system=system)
 
     pump_results = {p.name: p for p in result.pumps}
-    # At high system H, weak pump may operate far from BEP
     assert "Weak" in pump_results
+    assert pump_results["Weak"].alert == "off_curve"
+
+
+def test_zero_contribution_pump_alert():
+    """Pump whose shutoff head is below the operating head contributes Q=0."""
+    # Strong pump: high shutoff, will push system H above weak pump's h_max
+    strong_pump = PumpInput(
+        name="Strong",
+        points=[
+            PumpCurvePoint(q=0, h=100),
+            PumpCurvePoint(q=20, h=80),
+            PumpCurvePoint(q=40, h=50),
+        ],
+        bep_q=30.0,
+    )
+    # Weak pump: max head only 20m — at operating H it returns Q=0
+    weak_pump = PumpInput(
+        name="Weak",
+        points=[
+            PumpCurvePoint(q=0, h=20),
+            PumpCurvePoint(q=5, h=15),
+            PumpCurvePoint(q=10, h=8),
+        ],
+        bep_q=5.0,
+    )
+    system = SystemCurve(static_head=5.0, resistance=0.01)
+    result = calculate_parallel_pumps(pumps=[strong_pump, weak_pump], system=system)
+
+    pump_results = {p.name: p for p in result.pumps}
+    # Operating H will be >> 20m, so Weak pump Q=0 -> bep_ratio=0 -> off_curve
+    assert "Weak" in pump_results
+    assert pump_results["Weak"].alert in ("off_curve", "reverse_flow")
+
+
+def test_input_validation_too_few_points():
+    """Pump with fewer than 3 points should raise ValueError."""
+    pump = PumpInput(
+        name="Short",
+        points=[
+            PumpCurvePoint(q=0, h=50),
+            PumpCurvePoint(q=10, h=40),
+        ],
+    )
+    system = SystemCurve(static_head=5.0, resistance=0.02)
+    with pytest.raises(ValueError, match="at least 3"):
+        calculate_parallel_pumps(pumps=[pump], system=system)
+
+
+def test_input_validation_negative_q():
+    """Pump with negative Q values should raise ValueError."""
+    pump = PumpInput(
+        name="BadPump",
+        points=[
+            PumpCurvePoint(q=-5, h=60),
+            PumpCurvePoint(q=10, h=45),
+            PumpCurvePoint(q=20, h=30),
+        ],
+    )
+    system = SystemCurve(static_head=5.0, resistance=0.02)
+    with pytest.raises(ValueError, match="non-negative"):
+        calculate_parallel_pumps(pumps=[pump], system=system)
 
 
 def test_no_intersection_raises_value_error():

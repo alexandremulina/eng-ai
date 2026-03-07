@@ -94,8 +94,22 @@ def calculate_parallel_pumps(
     if len(pumps) < 1:
         raise ValueError("At least one pump required")
     for pump in pumps:
+        name = pump.name
         if len(pump.points) < 3:
-            raise ValueError(f"Pump '{pump.name}' needs at least 3 H-Q points")
+            raise ValueError(f"Pump '{name}' needs at least 3 H-Q points")
+        qs_check = [p.q for p in pump.points]
+        if any(q < 0 for q in qs_check):
+            raise ValueError(f"Pump '{name}' Q values must be non-negative")
+        qs_sorted_check = sorted(qs_check)
+        if len(qs_sorted_check) != len(set(qs_sorted_check)):
+            raise ValueError(f"Pump '{name}' has duplicate Q values")
+        # Validate strictly monotonically decreasing H as Q increases
+        sorted_points = sorted(pump.points, key=lambda p: p.q)
+        hs_check = [p.h for p in sorted_points]
+        if not all(hs_check[i] > hs_check[i + 1] for i in range(len(hs_check) - 1)):
+            raise ValueError(
+                f"Pump '{name}' H-Q curve must be strictly monotonically decreasing"
+            )
 
     pump_funcs = []
     for pump in pumps:
@@ -117,6 +131,12 @@ def calculate_parallel_pumps(
         q = q_total_of_h(h)
         return h - system.static_head - system.resistance * q**2
 
+    f_lo = f(h_op_min + 1e-6)
+    f_hi = f(h_op_max - 1e-6)
+    if f_lo * f_hi > 0:
+        raise ValueError(
+            "no_intersection: system curve does not bracket the combined pump curve"
+        )
     try:
         h_op = float(brentq(f, h_op_min + 1e-6, h_op_max - 1e-6))
     except ValueError:
@@ -129,14 +149,12 @@ def calculate_parallel_pumps(
     pump_ops = []
     for pump, q_of_h, h_max, hq_spline, q_min, q_max in pump_funcs:
         q_i = q_of_h(h_op)
+        bep_ratio = (q_i / pump.bep_q) if (pump.bep_q and pump.bep_q > 0) else None
         alert: PumpAlert = None
         if q_i < 0:
             alert = "reverse_flow"
-        elif pump.bep_q is not None and pump.bep_q > 0:
-            ratio = q_i / pump.bep_q
-            if ratio < 0.8 or ratio > 1.2:
-                alert = "off_curve"
-        bep_ratio = (q_i / pump.bep_q) if pump.bep_q else None
+        elif bep_ratio is not None and (bep_ratio < 0.8 or bep_ratio > 1.2):
+            alert = "off_curve"
         pump_ops.append(PumpOperatingPoint(
             name=pump.name,
             q=round(q_i, 3),
