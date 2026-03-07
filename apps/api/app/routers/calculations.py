@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+import base64
+import json
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel, Field
 from app.services.units import convert_unit, ConversionError
 from app.services.npsh import calculate_npsha
 from app.services.head_loss import calculate_head_loss
 from app.services.usage import check_and_record_usage
 from app.core.auth import get_current_user
+from app.services.ai import call_vision_llm
 from app.services.parallel_pumps import (
     calculate_parallel_pumps,
     PumpCurvePoint as SvcPumpCurvePoint,
@@ -171,3 +174,32 @@ async def parallel_pumps(req: ParallelPumpsRequest, user: dict = Depends(get_cur
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+CURVE_EXTRACTION_PROMPT = """You are analyzing a pump performance curve chart.
+Extract the H-Q (Head vs Flow) curve data points from this image.
+Return ONLY a valid JSON array of objects with "q" (flow, numeric) and "h" (head, numeric) keys.
+Extract at least 3 points spanning the full curve range.
+Example: [{"q": 0, "h": 45}, {"q": 10, "h": 40}, {"q": 20, "h": 30}, {"q": 30, "h": 15}]
+Do not include units, labels, or any text outside the JSON array."""
+
+
+@router.post("/extract-pump-curve")
+async def extract_pump_curve(
+    file: UploadFile = File(...),
+    user: dict = Depends(get_current_user),
+):
+    content = await file.read()
+    b64 = base64.b64encode(content).decode()
+    mime = file.content_type or "image/png"
+
+    try:
+        raw = await call_vision_llm(b64, CURVE_EXTRACTION_PROMPT, mime_type=mime)
+        raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        points = json.loads(raw)
+        if not isinstance(points, list) or len(points) < 3:
+            raise ValueError("Too few points extracted")
+        validated = [{"q": float(p["q"]), "h": float(p["h"])} for p in points]
+        return {"points": validated}
+    except (json.JSONDecodeError, KeyError, ValueError) as e:
+        raise HTTPException(status_code=400, detail=f"Could not extract curve: {e}")
