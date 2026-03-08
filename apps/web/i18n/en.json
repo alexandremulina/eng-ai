@@ -64,7 +64,11 @@
     "title": "Account",
     "plan": "Plan",
     "upgrade": "Upgrade to Pro",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "currentPlan": "Current plan",
+    "calculations": "Calculations",
+    "aiQueries": "AI queries",
+    "plans": "Available plans"
   },
   "common": {
     "loading": "Loading...",

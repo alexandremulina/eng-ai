@@ -64,7 +64,11 @@
     "title": "Conta",
     "plan": "Plano",
     "upgrade": "Upgrade para Pro",
-    "signOut": "Sair"
+    "signOut": "Sair",
+    "currentPlan": "Plano atual",
+    "calculations": "Cálculos",
+    "aiQueries": "Consultas IA",
+    "plans": "Planos disponíveis"
   },
   "common": {
     "loading": "Carregando...",

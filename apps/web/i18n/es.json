@@ -64,7 +64,11 @@
     "title": "Cuenta",
     "plan": "Plan",
     "upgrade": "Actualizar a Pro",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "currentPlan": "Plan actual",
+    "calculations": "Cálculos",
+    "aiQueries": "Consultas IA",
+    "plans": "Planes disponibles"
   },
   "common": {
     "loading": "Cargando...",
