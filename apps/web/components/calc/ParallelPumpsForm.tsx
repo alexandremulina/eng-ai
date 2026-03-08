@@ -3,6 +3,8 @@ import { useState, useRef } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
+import { CalcLabel } from "@/components/ui/calc-form"
+import { CalcCard } from "@/components/ui/calc-card"
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer,
 } from "recharts"
@@ -117,7 +119,7 @@ export function ParallelPumpsForm() {
       <form onSubmit={onSubmit} className="space-y-6">
         {/* Pumps */}
         {pumps.map((pump, pi) => (
-          <div key={pi} className="rounded-lg border border-white/10 p-4 space-y-4" style={{ backgroundColor: "#1A1D27" }}>
+          <CalcCard key={pi} className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PUMP_COLORS[pi] }} />
@@ -134,7 +136,7 @@ export function ParallelPumpsForm() {
               placeholder="Pump name / tag (optional)"
               value={pump.name}
               onChange={e => updatePump(pi, "name", e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
+              className="w-full h-10 px-3 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
               aria-label={`Pump ${pi + 1} name`}
             />
 
@@ -172,7 +174,7 @@ export function ParallelPumpsForm() {
                     step="any"
                     value={pt.q}
                     onChange={e => updatePoint(pi, ptIdx, "q", e.target.value)}
-                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
+                    className="h-10 px-2 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
                     aria-label={`Pump ${pi + 1} point ${ptIdx + 1} flow Q m³/h`}
                   />
                   <input
@@ -180,7 +182,7 @@ export function ParallelPumpsForm() {
                     step="any"
                     value={pt.h}
                     onChange={e => updatePoint(pi, ptIdx, "h", e.target.value)}
-                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
+                    className="h-10 px-2 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
                     aria-label={`Pump ${pi + 1} point ${ptIdx + 1} head H m`}
                   />
                   <button type="button" onClick={() => removePoint(pi, ptIdx)} className="w-6 h-10 text-white/30 hover:text-red-400 text-lg leading-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded" aria-label={`Remove point ${ptIdx + 1} from pump ${pi + 1}`}>×</button>
@@ -196,10 +198,10 @@ export function ParallelPumpsForm() {
               placeholder="BEP flow — Best Efficiency Point Q (m³/h) — optional"
               value={pump.bep_q}
               onChange={e => updatePump(pi, "bep_q", e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 placeholder:text-white/40"
+              className="w-full h-10 px-3 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 placeholder:text-[var(--color-text-hint)]"
               aria-label={`Pump ${pi + 1} best efficiency point flow (optional)`}
             />
-          </div>
+          </CalcCard>
         ))}
 
         {pumps.length < 4 && (
@@ -209,23 +211,23 @@ export function ParallelPumpsForm() {
         )}
 
         {/* System curve */}
-        <div className="rounded-lg border border-white/10 p-4 space-y-3" style={{ backgroundColor: "#1A1D27" }}>
+        <CalcCard className="space-y-3">
           <h3 className="text-sm font-semibold text-white">System Curve — H = H_static + R × Q²</h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label htmlFor="parallel-static-head" className="text-xs text-white/60 block">Static Head (m)</label>
+              <CalcLabel htmlFor="parallel-static-head" className="text-xs">Static Head (m)</CalcLabel>
               <input id="parallel-static-head" type="text" inputMode="decimal" value={staticHead} onChange={e => setStaticHead(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-static-head-desc" />
+                className="w-full h-10 px-3 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-static-head-desc" />
               <span id="parallel-static-head-desc" className="sr-only">Static head in meters for system curve</span>
             </div>
             <div className="space-y-1">
-              <label htmlFor="parallel-resistance" className="text-xs text-white/60 block">Resistance R</label>
+              <CalcLabel htmlFor="parallel-resistance" className="text-xs">Resistance R</CalcLabel>
               <input id="parallel-resistance" type="text" inputMode="decimal" value={resistance} onChange={e => setResistance(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-resistance-desc" />
+                className="w-full h-10 px-3 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-resistance-desc" />
               <span id="parallel-resistance-desc" className="sr-only">Resistance coefficient for system curve H = H_static + R × Q²</span>
             </div>
           </div>
-        </div>
+        </CalcCard>
 
         <button type="submit" disabled={loading}
           className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40"
@@ -262,7 +264,7 @@ export function ParallelPumpsForm() {
             </div>
           )}
           {/* Operating point */}
-          <div className="rounded-lg border border-white/10 p-4" style={{ backgroundColor: "#1A1D27" }}>
+          <CalcCard>
             <h3 className="text-sm font-semibold text-white mb-3">System Operating Point</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -274,16 +276,16 @@ export function ParallelPumpsForm() {
                 <p className="text-3xl font-bold text-blue-400">{result.operating_point.h} <span className="text-lg font-normal text-white/50">m</span></p>
               </div>
             </div>
-          </div>
+          </CalcCard>
 
           {/* Per-pump table */}
-          <div className="rounded-lg border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1D27" }}>
-            <div className="p-3 border-b border-white/10">
+          <CalcCard className="overflow-hidden p-0">
+            <div className="p-3 border-b border-[var(--color-border-subtle)]">
               <h3 className="text-sm font-semibold text-white">Individual Pump Results</h3>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-[var(--color-border-subtle)]">
                   <th className="p-3 text-left text-white/40 font-medium">Pump</th>
                   <th className="p-3 text-right text-white/40 font-medium">Q (m³/h)</th>
                   <th className="p-3 text-right text-white/40 font-medium">BEP%</th>
@@ -292,7 +294,7 @@ export function ParallelPumpsForm() {
               </thead>
               <tbody>
                 {result.pumps.map((p, i) => (
-                  <tr key={i} className="border-b border-white/5 last:border-0">
+                  <tr key={i} className="border-b border-[var(--color-border-subtle)]/50 last:border-0">
                     <td className="p-3 text-white flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: PUMP_COLORS[i] }} />
                       {p.name}
@@ -314,10 +316,10 @@ export function ParallelPumpsForm() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </CalcCard>
 
           {/* Chart */}
-          <div className="rounded-lg border border-white/10 p-4" style={{ backgroundColor: "#1A1D27" }}>
+          <CalcCard>
             <h3 className="text-sm font-semibold text-white mb-4">Performance Curves</h3>
             <ResponsiveContainer width="100%" height={280}>
               <LineChart margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
@@ -335,7 +337,7 @@ export function ParallelPumpsForm() {
                 {result && <ReferenceLine y={result.operating_point.h} stroke="rgba(255,255,255,0.3)" strokeDasharray="3 3" />}
               </LineChart>
             </ResponsiveContainer>
-          </div>
+          </CalcCard>
         </div>
       )}
     </div>
