@@ -46,27 +46,29 @@ export function BoltTorqueForm() {
     <div className="space-y-6">
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-white/80">Bolt Grade</label>
-          <select value={grade} onChange={e => setGrade(e.target.value)} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500">
+          <label htmlFor="bolt-grade" className="block text-sm font-medium text-white/80">Bolt Grade</label>
+          <select id="bolt-grade" value={grade} onChange={e => setGrade(e.target.value)} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40">
             {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
           </select>
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-white/80">Nominal Diameter (mm)</label>
-          <select value={diameter} onChange={e => setDiameter(Number(e.target.value))} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500">
+          <label htmlFor="bolt-diameter" className="block text-sm font-medium text-white/80">Nominal Diameter (mm)</label>
+          <select id="bolt-diameter" value={diameter} onChange={e => setDiameter(Number(e.target.value))} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40">
             {DIAMETERS.map(d => <option key={d} value={d}>M{d}</option>)}
           </select>
         </div>
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-white/80">Condition</label>
-          {CONDITIONS.map(c => (
-            <label key={c.value} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 cursor-pointer hover:border-blue-500/50 transition-colors">
-              <input type="radio" name="condition" value={c.value} checked={condition === c.value} onChange={() => setCondition(c.value)} className="accent-blue-500" />
-              <span className="text-white/80 text-sm">{c.label}</span>
-            </label>
-          ))}
-        </div>
-        <button type="submit" disabled={loading} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors">
+        <fieldset className="space-y-2">
+          <legend className="block text-sm font-medium text-white/80">Condition</legend>
+          <div className="space-y-2">
+            {CONDITIONS.map(c => (
+              <label key={c.value} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 cursor-pointer hover:border-blue-500/50 transition-colors focus-within:ring-2 focus-within:ring-blue-500/40">
+                <input type="radio" name="condition" value={c.value} checked={condition === c.value} onChange={() => setCondition(c.value)} className="accent-blue-500" aria-describedby={`condition-${c.value}`} />
+                <span id={`condition-${c.value}`} className="text-white/80 text-sm">{c.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <button type="submit" disabled={loading} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors" aria-busy={loading}>
           {loading ? "Calculating..." : "Calculate Torque"}
         </button>
       </form>

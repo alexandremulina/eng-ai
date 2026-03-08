@@ -1,75 +1,35 @@
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 
 const CALCULATORS = [
-  {
-    href: "/calc/parallel-pumps",
-    title: "Parallel Pump Association",
-    description: "Operating point for multiple pumps in parallel — including different models",
-    badge: "New",
-  },
-  {
-    href: "/calc/npsh",
-    title: "NPSH Calculator",
-    description: "Net Positive Suction Head — prevent cavitation",
-    badge: "Essential",
-  },
-  {
-    href: "/calc/material-selection",
-    title: "Material Selection",
-    description: "Compatible materials by fluid, concentration and temperature",
-    badge: "New",
-  },
-  {
-    href: "/calc/galvanic",
-    title: "Galvanic Corrosion Check",
-    description: "Assess compatibility between two materials in contact",
-    badge: "New",
-  },
-  {
-    href: "/calc/bolt-torque",
-    title: "Bolt Torque Calculator",
-    description: "Tightening torque and preload by grade, diameter and condition",
-    badge: "New",
-  },
-  {
-    href: "/calc/flanges",
-    title: "ASME B16.5 Flanges",
-    description: "Flange dimensions by NPS and pressure class",
-    badge: "New",
-  },
-  {
-    href: "/calc/head-loss",
-    title: "Head Loss",
-    description: "Darcy-Weisbach friction losses in piping",
-    badge: null,
-  },
-  {
-    href: "/calc/convert",
-    title: "Unit Converter",
-    description: "GPM, bar, kPa, m³/h and more",
-    badge: null,
-  },
-]
+  { href: "/calc/parallel-pumps", key: "parallelPumps", badge: "New" },
+  { href: "/calc/npsh", key: "npsh", badge: "Essential" },
+  { href: "/calc/material-selection", key: "materialSelection", badge: "New" },
+  { href: "/calc/galvanic", key: "galvanic", badge: "New" },
+  { href: "/calc/bolt-torque", key: "boltTorque", badge: "New" },
+  { href: "/calc/flanges", key: "flanges", badge: "New" },
+] as const
 
-export default function CalcPage() {
+export default async function CalcPage() {
+  const t = await getTranslations("calc")
+  const tCommon = await getTranslations("common")
   return (
     <div className="p-4 space-y-3">
-      <h1 className="text-xl font-bold text-white mb-4">Calculators</h1>
+      <h1 className="text-xl font-bold text-white mb-4">{t("title")}</h1>
       {CALCULATORS.map(c => (
         <Link
           key={c.href}
           href={c.href}
-          className="block rounded-lg border border-white/10 p-4 hover:border-blue-500/50 transition-colors"
-          style={{ backgroundColor: "#1A1D27" }}
+          className="block rounded-lg border border-[var(--color-border-subtle)] p-4 hover:border-blue-500/50 transition-colors bg-[var(--color-surface-secondary)]"
         >
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-base font-semibold text-white">{c.title}</h2>
-              <p className="text-sm text-white/50 mt-1">{c.description}</p>
+              <h2 className="text-base font-semibold text-white">{t(`${c.key}.title`)}</h2>
+              <p className="text-sm text-[var(--color-text-hint)] mt-1">{t(`${c.key}.description`)}</p>
             </div>
             {c.badge && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/50 text-blue-400 border border-blue-500/30">
-                {c.badge}
+                {c.badge === "Essential" ? tCommon("badgeEssential") : tCommon("badgeNew")}
               </span>
             )}
           </div>

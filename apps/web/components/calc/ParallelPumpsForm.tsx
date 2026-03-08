@@ -124,16 +124,18 @@ export function ParallelPumpsForm() {
                 <span className="text-sm font-semibold text-white">Pump {pi + 1}</span>
               </div>
               {pumps.length > 1 && (
-                <button type="button" onClick={() => removePump(pi)} className="text-xs text-red-400 hover:text-red-300">Remove</button>
+                <button type="button" onClick={() => removePump(pi)} className="text-xs text-red-400 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded" aria-label={`Remove pump ${pi + 1}`}>Remove</button>
               )}
             </div>
 
             <input
+              id={`pump-${pi}-name`}
               type="text"
               placeholder="Pump name / tag (optional)"
               value={pump.name}
               onChange={e => updatePump(pi, "name", e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
+              aria-label={`Pump ${pi + 1} name`}
             />
 
             {/* Upload */}
@@ -149,7 +151,8 @@ export function ParallelPumpsForm() {
                 type="button"
                 onClick={() => fileRefs.current[pi]?.click()}
                 disabled={extracting === pi}
-                className="w-full h-10 rounded-lg border border-dashed border-white/20 text-white/50 text-sm hover:border-blue-500/50 hover:text-white/70 transition-colors disabled:opacity-50"
+                className="w-full h-10 rounded-lg border border-dashed border-white/20 text-white/50 text-sm hover:border-blue-500/50 hover:text-white/70 transition-colors disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500/40"
+                aria-label={`Upload datasheet for pump ${pi + 1} to auto-fill curve`}
               >
                 {extracting === pi ? "Extracting curve..." : "Upload datasheet (PDF or image) to auto-fill"}
               </button>
@@ -164,29 +167,43 @@ export function ParallelPumpsForm() {
               </div>
               {pump.points.map((pt, ptIdx) => (
                 <div key={ptIdx} className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2">
-                  <input type="number" step="any" value={pt.q} onChange={e => updatePoint(pi, ptIdx, "q", e.target.value)}
-                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 text-center" />
-                  <input type="number" step="any" value={pt.h} onChange={e => updatePoint(pi, ptIdx, "h", e.target.value)}
-                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 text-center" />
-                  <button type="button" onClick={() => removePoint(pi, ptIdx)} className="w-6 h-10 text-white/30 hover:text-red-400 text-lg leading-none">×</button>
+                  <input
+                    type="number"
+                    step="any"
+                    value={pt.q}
+                    onChange={e => updatePoint(pi, ptIdx, "q", e.target.value)}
+                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
+                    aria-label={`Pump ${pi + 1} point ${ptIdx + 1} flow Q m³/h`}
+                  />
+                  <input
+                    type="number"
+                    step="any"
+                    value={pt.h}
+                    onChange={e => updatePoint(pi, ptIdx, "h", e.target.value)}
+                    className="h-10 px-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 text-center"
+                    aria-label={`Pump ${pi + 1} point ${ptIdx + 1} head H m`}
+                  />
+                  <button type="button" onClick={() => removePoint(pi, ptIdx)} className="w-6 h-10 text-white/30 hover:text-red-400 text-lg leading-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded" aria-label={`Remove point ${ptIdx + 1} from pump ${pi + 1}`}>×</button>
                 </div>
               ))}
-              <button type="button" onClick={() => addPoint(pi)} className="text-xs text-blue-400 hover:text-blue-300">+ Add point</button>
+              <button type="button" onClick={() => addPoint(pi)} className="text-xs text-blue-400 hover:text-blue-300 focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded" aria-label={`Add H-Q point to pump ${pi + 1}`}>+ Add point</button>
             </div>
 
             <input
+              id={`pump-${pi}-bep`}
               type="text"
               inputMode="decimal"
               placeholder="BEP flow — Best Efficiency Point Q (m³/h) — optional"
               value={pump.bep_q}
               onChange={e => updatePump(pi, "bep_q", e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 placeholder:text-white/30"
+              className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 placeholder:text-white/40"
+              aria-label={`Pump ${pi + 1} best efficiency point flow (optional)`}
             />
           </div>
         ))}
 
         {pumps.length < 4 && (
-          <button type="button" onClick={addPump} className="w-full h-10 rounded-lg border border-dashed border-blue-500/30 text-blue-400 text-sm hover:border-blue-500/60 transition-colors">
+          <button type="button" onClick={addPump} className="w-full h-10 rounded-lg border border-dashed border-blue-500/30 text-blue-400 text-sm hover:border-blue-500/60 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-label="Add another pump">
             + Add pump
           </button>
         )}
@@ -196,20 +213,24 @@ export function ParallelPumpsForm() {
           <h3 className="text-sm font-semibold text-white">System Curve — H = H_static + R × Q²</h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-xs text-white/50">Static Head (m)</label>
-              <input type="text" inputMode="decimal" value={staticHead} onChange={e => setStaticHead(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500" />
+              <label htmlFor="parallel-static-head" className="text-xs text-white/60 block">Static Head (m)</label>
+              <input id="parallel-static-head" type="text" inputMode="decimal" value={staticHead} onChange={e => setStaticHead(e.target.value)}
+                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-static-head-desc" />
+              <span id="parallel-static-head-desc" className="sr-only">Static head in meters for system curve</span>
             </div>
             <div className="space-y-1">
-              <label className="text-xs text-white/50">Resistance R</label>
-              <input type="text" inputMode="decimal" value={resistance} onChange={e => setResistance(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500" />
+              <label htmlFor="parallel-resistance" className="text-xs text-white/60 block">Resistance R</label>
+              <input id="parallel-resistance" type="text" inputMode="decimal" value={resistance} onChange={e => setResistance(e.target.value)}
+                className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40" aria-describedby="parallel-resistance-desc" />
+              <span id="parallel-resistance-desc" className="sr-only">Resistance coefficient for system curve H = H_static + R × Q²</span>
             </div>
           </div>
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors">
+          className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40"
+          aria-busy={loading}
+        >
           {loading ? "Calculating..." : "Calculate Operating Point"}
         </button>
       </form>
@@ -303,7 +324,7 @@ export function ParallelPumpsForm() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="q" type="number" domain={["auto", "auto"]} stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "Q (m³/h)", position: "insideBottom", offset: -2, fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
                 <YAxis dataKey="h" type="number" domain={["auto", "auto"]} stroke="rgba(255,255,255,0.3)" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} label={{ value: "H (m)", angle: -90, position: "insideLeft", fill: "rgba(255,255,255,0.3)", fontSize: 11 }} />
-                <Tooltip contentStyle={{ backgroundColor: "#1A1D27", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} labelStyle={{ color: "rgba(255,255,255,0.6)" }} itemStyle={{ color: "rgba(255,255,255,0.8)" }} formatter={(value: number) => [`${value.toFixed(1)} m`, undefined]} labelFormatter={(q: number) => `Q = ${Number(q).toFixed(1)} m³/h`} />
+                <Tooltip contentStyle={{ backgroundColor: "#1A1D27", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} labelStyle={{ color: "rgba(255,255,255,0.6)" }} itemStyle={{ color: "rgba(255,255,255,0.8)" }} formatter={(value: unknown) => [typeof value === "number" ? `${value.toFixed(1)} m` : String(value), undefined]} labelFormatter={(label: unknown) => `Q = ${Number(label).toFixed(1)} m³/h`} />
                 <Legend wrapperStyle={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }} />
                 {result && individualData.map((curve, i) => (
                   <Line key={result.pumps[i]?.name ?? `Pump ${i+1}`} data={curve} type="monotone" dataKey="h" name={result.pumps[i]?.name ?? `Pump ${i+1}`} stroke={PUMP_COLORS[i]} strokeWidth={1.5} dot={false} strokeDasharray="4 2" />

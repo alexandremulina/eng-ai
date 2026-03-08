@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
+import { NextIntlClientProvider } from "next-intl"
+import { getLocale, getMessages } from "next-intl/server"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Toaster } from "sonner"
@@ -18,13 +20,17 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
-          <Toaster richColors position="top-center" />
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+            <Toaster richColors position="top-center" />
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

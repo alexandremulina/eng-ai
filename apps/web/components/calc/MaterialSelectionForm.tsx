@@ -35,10 +35,22 @@ export function MaterialSelectionForm() {
   const [temp, setTemp] = useState("25")
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<SelectionResult | null>(null)
+  const [errors, setErrors] = useState<{ concentration?: string; temp?: string }>({})
+
+  function validate(): boolean {
+    const next: { concentration?: string; temp?: string } = {}
+    const c = Number(concentration)
+    if (Number.isNaN(c) || c < 0 || c > 100) next.concentration = "Enter 0–100"
+    const t = Number(temp)
+    if (Number.isNaN(t) || t < -273 || t > 500) next.temp = "Enter a valid temperature (°C)"
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!token || !fluid) { toast.error("Select a fluid and log in"); return }
+    if (!validate()) return
     setLoading(true)
     try {
       const data = await api.materialSelection({ fluid, concentration_pct: Number(concentration), temp_c: Number(temp) }, token) as SelectionResult
@@ -54,23 +66,43 @@ export function MaterialSelectionForm() {
     <div className="space-y-6">
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-white/80">Fluid</label>
-          <select value={fluid} onChange={e => { setFluid(e.target.value); setResult(null) }} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500">
+          <label htmlFor="material-fluid" className="block text-sm font-medium text-white/80">Fluid</label>
+          <select id="material-fluid" value={fluid} onChange={e => { setFluid(e.target.value); setResult(null) }} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40">
             <option value="">Select fluid...</option>
             {FLUIDS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
           </select>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="block text-sm font-medium text-white/80">Concentration (%)</label>
-            <input type="text" inputMode="decimal" value={concentration} onChange={e => setConcentration(e.target.value)} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500" />
+            <label htmlFor="material-concentration" className="block text-sm font-medium text-white/80">Concentration (%)</label>
+            <input
+              id="material-concentration"
+              type="text"
+              inputMode="decimal"
+              value={concentration}
+              onChange={e => { setConcentration(e.target.value); setErrors(prev => ({ ...prev, concentration: undefined })) }}
+              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
+              aria-invalid={errors.concentration ? "true" : undefined}
+              aria-describedby={errors.concentration ? "material-concentration-error" : undefined}
+            />
+            {errors.concentration && <p id="material-concentration-error" className="text-xs text-red-400" role="alert">{errors.concentration}</p>}
           </div>
           <div className="space-y-1">
-            <label className="block text-sm font-medium text-white/80">Temperature (°C)</label>
-            <input type="text" inputMode="decimal" value={temp} onChange={e => setTemp(e.target.value)} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500" />
+            <label htmlFor="material-temp" className="block text-sm font-medium text-white/80">Temperature (°C)</label>
+            <input
+              id="material-temp"
+              type="text"
+              inputMode="decimal"
+              value={temp}
+              onChange={e => { setTemp(e.target.value); setErrors(prev => ({ ...prev, temp: undefined })) }}
+              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
+              aria-invalid={errors.temp ? "true" : undefined}
+              aria-describedby={errors.temp ? "material-temp-error" : undefined}
+            />
+            {errors.temp && <p id="material-temp-error" className="text-xs text-red-400" role="alert">{errors.temp}</p>}
           </div>
         </div>
-        <button type="submit" disabled={loading || !fluid} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors">
+        <button type="submit" disabled={loading || !fluid} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors" aria-busy={loading}>
           {loading ? "Loading..." : "Get Material Recommendations"}
         </button>
       </form>

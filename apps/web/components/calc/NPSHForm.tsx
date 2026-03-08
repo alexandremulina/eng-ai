@@ -3,6 +3,8 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
+import { CalcInput, CalcLabel, CalcHint, CalcError } from "@/components/ui/calc-form"
+import { CalcCard } from "@/components/ui/calc-card"
 
 interface NPSHResult {
   npsha_m: number
@@ -34,6 +36,7 @@ export function NPSHForm() {
   const { token } = useSession()
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<NPSHResult | null>(null)
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [form, setForm] = useState<FormState>({
     p_atm_kpa: "101.325",
     p_vapor_kpa: "2.338",
@@ -45,6 +48,25 @@ export function NPSHForm() {
 
   function set(key: keyof FormState, value: string) {
     setForm(prev => ({ ...prev, [key]: value }))
+    setErrors(prev => ({ ...prev, [key]: undefined }))
+    setResult(null)
+  }
+
+  function validate(): boolean {
+    const next: Partial<Record<keyof FormState, string>> = {}
+    const required: (keyof FormState)[] = ["p_atm_kpa", "p_vapor_kpa", "z_s_m", "h_loss_m", "fluid_density_kg_m3"]
+    for (const key of required) {
+      const v = form[key].trim()
+      if (!v) { next[key] = "Required"; continue }
+      const n = Number(v)
+      if (Number.isNaN(n)) next[key] = "Enter a number"
+    }
+    if (form.npshr_m.trim()) {
+      const n = Number(form.npshr_m)
+      if (Number.isNaN(n)) next.npshr_m = "Enter a number or leave empty"
+    }
+    setErrors(next)
+    return Object.keys(next).length === 0
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -53,7 +75,9 @@ export function NPSHForm() {
       toast.error("Please log in to use calculators")
       return
     }
+    if (!validate()) return
     setLoading(true)
+    setResult(null)
     try {
       const body: Record<string, number> = {
         p_atm_kpa: Number(form.p_atm_kpa),
@@ -85,32 +109,35 @@ export function NPSHForm() {
       <form onSubmit={onSubmit} className="space-y-4">
         {FIELDS.map(({ key, label, placeholder, hint }) => (
           <div key={key} className="space-y-1">
-            <label htmlFor={key} className="block text-sm font-medium text-white/80">
-              {label}
-            </label>
-            <input
+            <CalcLabel htmlFor={key}>{label}</CalcLabel>
+            <CalcInput
               id={key}
               type="text"
               inputMode="decimal"
               placeholder={placeholder}
               value={form[key]}
               onChange={e => set(key, e.target.value)}
-              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg placeholder:text-white/30 focus:outline-none focus:border-blue-500 transition-colors"
+              aria-describedby={errors[key] ? `${key}-error` : undefined}
+              aria-invalid={errors[key] ? "true" : undefined}
             />
-            <p className="text-xs text-white/40">{hint}</p>
+            {errors[key] && (
+              <CalcError id={`${key}-error`}>{errors[key]}</CalcError>
+            )}
+            {!errors[key] && <CalcHint>{hint}</CalcHint>}
           </div>
         ))}
         <button
           type="submit"
           disabled={loading}
           className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors"
+          aria-busy={loading}
         >
           {loading ? "Calculating..." : "Calculate NPSHa"}
         </button>
       </form>
 
       {result && (
-        <div className="rounded-lg border border-white/10 p-4 space-y-3" style={{ backgroundColor: "#1A1D27" }}>
+        <CalcCard className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-white">NPSHa Result</h3>
             {result.cavitation_risk ? (
@@ -140,7 +167,7 @@ export function NPSHForm() {
               {result.formula}
             </pre>
           </details>
-        </div>
+        </CalcCard>
       )}
     </div>
   )

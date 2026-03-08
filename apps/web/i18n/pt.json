@@ -7,6 +7,10 @@
   },
   "calc": {
     "title": "Calculadoras",
+    "parallelPumps": {
+      "title": "Associação de Bombas em Paralelo",
+      "description": "Ponto de operação para múltiplas bombas em paralelo — inclusive modelos diferentes"
+    },
     "npsh": {
       "title": "Calculadora NPSH",
       "subtitle": "NPSH disponível",
@@ -23,6 +27,22 @@
     "convert": {
       "title": "Conversor de Unidades",
       "description": "GPM, bar, kPa, m³/h e mais"
+    },
+    "materialSelection": {
+      "title": "Seleção de Material",
+      "description": "Materiais compatíveis por fluido, concentração e temperatura"
+    },
+    "galvanic": {
+      "title": "Verificação de Corrosão Galvânica",
+      "description": "Avalie a compatibilidade entre dois materiais em contato"
+    },
+    "boltTorque": {
+      "title": "Calculadora de Torque de Parafusos",
+      "description": "Torque de aperto e pré-carga por grau, diâmetro e condição"
+    },
+    "flanges": {
+      "title": "Flanges ASME B16.5",
+      "description": "Dimensões de flange por NPS e classe de pressão"
     }
   },
   "norms": {
@@ -45,6 +65,15 @@
     "error": "Algo deu errado",
     "back": "Voltar",
     "save": "Salvar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "soon": "Em breve",
+    "comingSoon": "Em breve",
+    "notFound": "Página não encontrada",
+    "notFoundDescription": "A página que você procura não existe ou foi movida.",
+    "goToCalculators": "Ir para calculadoras",
+    "tryAgain": "Tentar novamente",
+    "backToCalculators": "Voltar aos calculadores",
+    "badgeNew": "Novo",
+    "badgeEssential": "Essencial"
   }
 }

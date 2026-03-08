@@ -7,7 +7,36 @@
   },
   "calc": {
     "title": "Calculators",
+    "parallelPumps": {
+      "title": "Parallel Pump Association",
+      "description": "Operating point for multiple pumps in parallel — including different models"
+    },
     "npsh": {
+      "title": "NPSH Calculator",
+      "subtitle": "Net Positive Suction Head available",
+      "result": "NPSHa Result",
+      "safe": "Safe",
+      "risk": "Cavitation Risk",
+      "calculate": "Calculate NPSHa",
+      "calculating": "Calculating..."
+    },
+    "materialSelection": {
+      "title": "Material Selection",
+      "description": "Compatible materials by fluid, concentration and temperature"
+    },
+    "galvanic": {
+      "title": "Galvanic Corrosion Check",
+      "description": "Assess compatibility between two materials in contact"
+    },
+    "boltTorque": {
+      "title": "Bolt Torque Calculator",
+      "description": "Tightening torque and preload by grade, diameter and condition"
+    },
+    "flanges": {
+      "title": "ASME B16.5 Flanges",
+      "description": "Flange dimensions by NPS and pressure class"
+    },
+    "headLoss": {
       "title": "NPSH Calculator",
       "subtitle": "Net Positive Suction Head available",
       "result": "NPSHa Result",
@@ -45,6 +74,15 @@
     "error": "Something went wrong",
     "back": "Back",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "soon": "Soon",
+    "comingSoon": "Coming soon",
+    "notFound": "Page not found",
+    "notFoundDescription": "The page you're looking for doesn't exist or was moved.",
+    "goToCalculators": "Go to calculators",
+    "tryAgain": "Try again",
+    "backToCalculators": "Back to calculators",
+    "badgeNew": "New",
+    "badgeEssential": "Essential"
   }
 }
