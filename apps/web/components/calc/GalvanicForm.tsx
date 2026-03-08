@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react"
 import { GALVANIC_SERIES, checkGalvanicCompatibility, GalvanicResult } from "@/lib/galvanic"
+import { CalcSelect, CalcLabel } from "@/components/ui/calc-form"
+import { CalcCard } from "@/components/ui/calc-card"
 
 const MATERIALS = Object.keys(GALVANIC_SERIES)
 
@@ -25,16 +27,11 @@ export function GalvanicForm() {
           { id: "galvanic-mat2", label: "Material 2", value: mat2, set: setMat2 },
         ].map(({ id, label, value, set }) => (
           <div key={id} className="space-y-1">
-            <label htmlFor={id} className="block text-sm font-medium text-white/80">{label}</label>
-            <select
-              id={id}
-              value={value}
-              onChange={e => { set(e.target.value); setResult(null) }}
-              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
-            >
+            <CalcLabel htmlFor={id}>{label}</CalcLabel>
+            <CalcSelect id={id} value={value} onChange={e => { set(e.target.value); setResult(null) }}>
               <option value="">Select material...</option>
               {MATERIALS.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
+            </CalcSelect>
           </div>
         ))}
         <button
@@ -48,7 +45,7 @@ export function GalvanicForm() {
       </div>
 
       {result && (
-        <div className={`rounded-lg border p-4 space-y-3 ${riskBg[result.risk]}`}>
+        <CalcCard className={`space-y-3 ${riskBg[result.risk]}`}>
           <div className="flex items-center justify-between">
             <span className={`text-lg font-bold uppercase ${riskColors[result.risk]}`}>
               {result.risk} risk
@@ -60,7 +57,7 @@ export function GalvanicForm() {
             <p>Cathode (protected): <span className="text-green-400 font-medium">{result.cathode}</span></p>
           </div>
           <p className="text-sm text-white/80">{result.recommendation}</p>
-        </div>
+        </CalcCard>
       )}
     </div>
   )
