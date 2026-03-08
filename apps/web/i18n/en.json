@@ -13,6 +13,7 @@
     },
     "npsh": {
       "title": "NPSH Calculator",
+      "description": "Net Positive Suction Head — prevent cavitation",
       "subtitle": "Net Positive Suction Head available",
       "result": "NPSHa Result",
       "safe": "Safe",

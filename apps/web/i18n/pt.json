@@ -13,6 +13,7 @@
     },
     "npsh": {
       "title": "Calculadora NPSH",
+      "description": "NPSH disponível — prevenir cavitação",
       "subtitle": "NPSH disponível",
       "result": "Resultado NPSHd",
       "safe": "Seguro",
