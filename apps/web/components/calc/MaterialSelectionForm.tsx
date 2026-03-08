@@ -112,7 +112,7 @@ export function MaterialSelectionForm() {
       )}
 
       {result && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
           {result.components.map(comp => (
             <CalcCard key={comp.component} className="overflow-hidden p-0">
               <div className="p-3 border-b border-white/10">

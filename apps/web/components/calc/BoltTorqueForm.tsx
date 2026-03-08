@@ -90,9 +90,12 @@ export function BoltTorqueForm() {
       )}
 
       {result && (
-        <CalcCard className="space-y-3">
+        <CalcCard className="space-y-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
           <h3 className="text-base font-semibold text-white">Result — {result.grade} M{result.diameter_mm} ({result.condition})</h3>
-          <div className="text-4xl font-bold text-blue-400">{result.torque_nm} N·m</div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-bold text-white">{result.torque_nm.toFixed(1)}</span>
+            <span className="text-lg text-white/60">N·m</span>
+          </div>
           <p className="text-sm text-white/50">{result.torque_ftlb} ft·lb</p>
           {result.diameter_used_mm !== result.diameter_mm && (
             <p className="text-xs text-yellow-400/70">

@@ -268,16 +268,22 @@ export function ParallelPumpsForm() {
             </div>
           )}
           {/* Operating point */}
-          <CalcCard>
+          <CalcCard className="animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
             <h3 className="text-sm font-semibold text-white mb-3">System Operating Point</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-white/40">Total Flow</p>
-                <p className="text-3xl font-bold text-blue-400">{result.operating_point.q_total} <span className="text-lg font-normal text-white/50">m³/h</span></p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-white">{result.operating_point.q_total}</span>
+                  <span className="text-lg text-white/60">m³/h</span>
+                </div>
               </div>
               <div>
                 <p className="text-xs text-white/40">Operating Head</p>
-                <p className="text-3xl font-bold text-blue-400">{result.operating_point.h} <span className="text-lg font-normal text-white/50">m</span></p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-white">{result.operating_point.h}</span>
+                  <span className="text-lg text-white/60">m</span>
+                </div>
               </div>
             </div>
           </CalcCard>

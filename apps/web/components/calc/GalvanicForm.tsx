@@ -49,12 +49,15 @@ export function GalvanicForm() {
       )}
 
       {result && (
-        <CalcCard className={`space-y-3 ${riskBg[result.risk]}`}>
+        <CalcCard className={`space-y-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-200 ${riskBg[result.risk]}`}>
           <div className="flex items-center justify-between">
             <span className={`text-lg font-bold uppercase ${riskColors[result.risk]}`}>
               {result.risk} risk
             </span>
-            <span className="text-white/60 text-sm">{result.potential_mv} mV difference</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-bold text-white">{result.potential_mv}</span>
+              <span className="text-lg text-white/60 ml-1">mV</span>
+            </div>
           </div>
           <div className="text-sm text-white/70 space-y-1">
             <p>Anode (corrodes): <span className="text-red-400 font-medium">{result.anode}</span></p>

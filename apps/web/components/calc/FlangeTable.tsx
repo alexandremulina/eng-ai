@@ -47,7 +47,7 @@ export function FlangeTable() {
       </div>
 
       {dims && (
-        <CalcCard className="overflow-hidden p-0">
+        <CalcCard className="overflow-hidden p-0 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
           <div className="p-3 border-b border-white/10">
             <h3 className="text-sm font-semibold text-white">NPS {dims.nps}" — Class {dims.class}# (ASME B16.5)</h3>
           </div>

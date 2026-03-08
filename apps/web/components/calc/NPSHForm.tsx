@@ -141,7 +141,7 @@ export function NPSHForm() {
       )}
 
       {result && (
-        <CalcCard className="space-y-3">
+        <CalcCard className="space-y-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-white">NPSHa Result</h3>
             {result.cavitation_risk ? (
@@ -154,8 +154,9 @@ export function NPSHForm() {
               </span>
             )}
           </div>
-          <div className="text-4xl font-bold text-blue-400">
-            {result.npsha_m} m
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-bold text-white">{result.npsha_m.toFixed(2)}</span>
+            <span className="text-lg text-white/60">m</span>
           </div>
           {result.safety_margin_m !== null && (
             <p className="text-sm text-white/60">
