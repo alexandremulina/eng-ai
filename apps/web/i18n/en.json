@@ -37,15 +37,6 @@
       "description": "Flange dimensions by NPS and pressure class"
     },
     "headLoss": {
-      "title": "NPSH Calculator",
-      "subtitle": "Net Positive Suction Head available",
-      "result": "NPSHa Result",
-      "safe": "Safe",
-      "risk": "Cavitation Risk",
-      "calculate": "Calculate NPSHa",
-      "calculating": "Calculating..."
-    },
-    "headLoss": {
       "title": "Head Loss",
       "description": "Darcy-Weisbach friction losses in piping"
     },
