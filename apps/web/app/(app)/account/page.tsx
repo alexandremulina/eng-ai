@@ -40,9 +40,9 @@ export default async function AccountPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-white/40 uppercase tracking-wide font-medium">{t("account.currentPlan")}</p>
-            <p className="text-lg font-bold text-white mt-0.5">Free</p>
+            <p className="text-lg font-bold text-white mt-0.5">{t("account.planFree")}</p>
           </div>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/60 border border-white/10">Active</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/60 border border-white/10">{t("account.active")}</span>
         </div>
         <div className="space-y-3">
           <UsageMeter label={t("account.calculations")} used={10} limit={50} />
@@ -75,7 +75,7 @@ export default async function AccountPage() {
               )}
               {plan.highlight && !plan.current && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/50 text-blue-400 border border-blue-500/30">
-                  Popular
+                  {t("account.popular")}
                 </span>
               )}
             </div>

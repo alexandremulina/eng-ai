@@ -68,7 +68,10 @@
     "currentPlan": "Plano atual",
     "calculations": "Cálculos",
     "aiQueries": "Consultas IA",
-    "plans": "Planos disponíveis"
+    "plans": "Planos disponíveis",
+    "planFree": "Gratuito",
+    "active": "Ativo",
+    "popular": "Popular"
   },
   "common": {
     "loading": "Carregando...",

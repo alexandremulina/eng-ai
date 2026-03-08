@@ -68,7 +68,10 @@
     "currentPlan": "Current plan",
     "calculations": "Calculations",
     "aiQueries": "AI queries",
-    "plans": "Available plans"
+    "plans": "Available plans",
+    "planFree": "Free",
+    "active": "Active",
+    "popular": "Popular"
   },
   "common": {
     "loading": "Loading...",
