@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
+import { cn } from "@/lib/utils"
 
 const CALCULATORS = [
   { href: "/calc/parallel-pumps", key: "parallelPumps", badge: "New" },
@@ -8,6 +9,8 @@ const CALCULATORS = [
   { href: "/calc/galvanic", key: "galvanic", badge: "New" },
   { href: "/calc/bolt-torque", key: "boltTorque", badge: "New" },
   { href: "/calc/flanges", key: "flanges", badge: "New" },
+  { href: "/calc/head-loss", key: "headLoss", badge: "Soon" },
+  { href: "/calc/convert", key: "convert", badge: "Soon" },
 ] as const
 
 export default async function CalcPage() {
@@ -28,8 +31,19 @@ export default async function CalcPage() {
               <p className="text-sm text-[var(--color-text-hint)] mt-1">{t(`${c.key}.description`)}</p>
             </div>
             {c.badge && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/50 text-blue-400 border border-blue-500/30">
-                {c.badge === "Essential" ? tCommon("badgeEssential") : tCommon("badgeNew")}
+              <span className={cn(
+                "text-xs px-2 py-0.5 rounded-full border",
+                c.badge === "Essential"
+                  ? "bg-blue-900/50 text-blue-400 border-blue-500/30"
+                  : c.badge === "Soon"
+                    ? "bg-white/5 text-white/40 border-white/10"
+                    : "bg-blue-900/50 text-blue-400 border-blue-500/30"
+              )}>
+                {c.badge === "Essential"
+                  ? tCommon("badgeEssential")
+                  : c.badge === "Soon"
+                    ? tCommon("soon")
+                    : tCommon("badgeNew")}
               </span>
             )}
           </div>
