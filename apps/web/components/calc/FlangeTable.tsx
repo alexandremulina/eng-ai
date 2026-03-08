@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react"
 import { NPS_OPTIONS, CLASS_OPTIONS, getFlangeDimensions, FlangeDimensions } from "@/lib/flanges"
+import { CalcSelect, CalcLabel } from "@/components/ui/calc-form"
+import { CalcCard } from "@/components/ui/calc-card"
 
 export function FlangeTable() {
   const [nps, setNps] = useState("")
@@ -21,33 +23,31 @@ export function FlangeTable() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
-          <label htmlFor="flange-nps" className="block text-sm font-medium text-white/80">NPS</label>
-          <select
+          <CalcLabel htmlFor="flange-nps">NPS</CalcLabel>
+          <CalcSelect
             id="flange-nps"
             value={nps}
             onChange={e => setNps(e.target.value)}
-            className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
           >
             <option value="">Select NPS</option>
             {NPS_OPTIONS.map(n => <option key={n} value={n}>{n}"</option>)}
-          </select>
+          </CalcSelect>
         </div>
         <div className="space-y-1">
-          <label htmlFor="flange-class" className="block text-sm font-medium text-white/80">Pressure Class</label>
-          <select
+          <CalcLabel htmlFor="flange-class">Pressure Class</CalcLabel>
+          <CalcSelect
             id="flange-class"
             value={cls}
             onChange={e => setCls(Number(e.target.value))}
-            className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
           >
             <option value="">Select class</option>
             {CLASS_OPTIONS.map(c => <option key={c} value={c}>{c}#</option>)}
-          </select>
+          </CalcSelect>
         </div>
       </div>
 
       {dims && (
-        <div className="rounded-lg border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1D27" }}>
+        <CalcCard className="overflow-hidden p-0">
           <div className="p-3 border-b border-white/10">
             <h3 className="text-sm font-semibold text-white">NPS {dims.nps}" — Class {dims.class}# (ASME B16.5)</h3>
           </div>
@@ -61,7 +61,7 @@ export function FlangeTable() {
               ))}
             </tbody>
           </table>
-        </div>
+        </CalcCard>
       )}
 
       {nps && cls && !dims && (
