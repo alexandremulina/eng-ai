@@ -47,7 +47,9 @@
   },
   "norms": {
     "title": "Norm Consultant",
-    "placeholder": "Ask about API 610, ASME, ISO standards..."
+    "placeholder": "Ask about API 610, ASME, ISO standards...",
+    "proTitle": "Unlock Norm Consultant",
+    "proDescription": "Search API, ASME, ISO standards with AI-powered answers and exact citations."
   },
   "diagnosis": {
     "title": "Photo Diagnosis",
