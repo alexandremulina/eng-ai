@@ -2,14 +2,14 @@ import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { Lock } from "lucide-react"
 
+const MOCK_RESULTS = [
+  { norm: "API 610", section: "Section 6.1.3", excerpt: "Minimum continuous stable flow shall be defined by the pump manufacturer based on acceptable vibration levels, temperature rise, and internal recirculation..." },
+  { norm: "ASME B73.1", section: "Section 4.2", excerpt: "Pump casings shall be hydrostatically tested at 1.5 times the maximum allowable working pressure. Test duration shall not be less than 30 minutes..." },
+  { norm: "ISO 5199", section: "Clause 5.3", excerpt: "The NPSH available (NPSHa) shall exceed the NPSH required (NPSHr) by a margin of at least 0.5 m under all specified operating conditions..." },
+]
+
 export default async function NormsPage() {
   const t = await getTranslations()
-
-  const MOCK_RESULTS = [
-    { norm: "API 610", section: "Section 6.1.3", excerpt: "Minimum continuous stable flow shall be defined by the pump manufacturer based on acceptable vibration levels, temperature rise, and internal recirculation..." },
-    { norm: "ASME B73.1", section: "Section 4.2", excerpt: "Pump casings shall be hydrostatically tested at 1.5 times the maximum allowable working pressure. Test duration shall not be less than 30 minutes..." },
-    { norm: "ISO 5199", section: "Clause 5.3", excerpt: "The NPSH available (NPSHa) shall exceed the NPSH required (NPSHr) by a margin of at least 0.5 m under all specified operating conditions..." },
-  ]
 
   return (
     <div className="p-4 space-y-4">
@@ -27,7 +27,7 @@ export default async function NormsPage() {
 
       {/* Mock results with blur overlay */}
       <div className="relative">
-        <div className="space-y-3 select-none pointer-events-none" style={{ filter: "blur(3px)" }}>
+        <div className="space-y-3 select-none pointer-events-none" style={{ filter: "blur(3px)" }} aria-hidden="true">
           {MOCK_RESULTS.map(r => (
             <div
               key={r.norm}
@@ -43,7 +43,7 @@ export default async function NormsPage() {
         </div>
 
         {/* Pro overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-lg bg-[var(--color-surface)]/80 backdrop-blur-sm">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-lg bg-[var(--color-surface)]/80 backdrop-blur-sm" role="region" aria-label="Pro feature">
           <Lock size={28} className="text-blue-400" />
           <div className="text-center">
             <p className="text-sm font-semibold text-white mb-1">{t("norms.proTitle")}</p>
