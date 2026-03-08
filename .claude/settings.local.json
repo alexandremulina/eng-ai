@@ -33,7 +33,8 @@
       "Bash(/usr/bin/python3.10:*)",
       "Bash(PYTHONPATH=/mnt/c/users/alexa/projects/eng-brain/apps/api /usr/bin/python3.10:*)",
       "Bash(pip3 show:*)",
-      "Bash(pip3 install:*)"
+      "Bash(pip3 install:*)",
+      "Bash(grep:*)"
     ]
   }
 }
