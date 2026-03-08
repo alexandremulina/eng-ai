@@ -3,6 +3,8 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
+import { CalcInput, CalcSelect, CalcLabel, CalcError } from "@/components/ui/calc-form"
+import { CalcCard } from "@/components/ui/calc-card"
 
 const FLUIDS = [
   { value: "water", label: "Water" },
@@ -66,40 +68,38 @@ export function MaterialSelectionForm() {
     <div className="space-y-6">
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1">
-          <label htmlFor="material-fluid" className="block text-sm font-medium text-white/80">Fluid</label>
-          <select id="material-fluid" value={fluid} onChange={e => { setFluid(e.target.value); setResult(null) }} className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40">
+          <CalcLabel htmlFor="material-fluid">Fluid</CalcLabel>
+          <CalcSelect id="material-fluid" value={fluid} onChange={e => { setFluid(e.target.value); setResult(null) }}>
             <option value="">Select fluid...</option>
             {FLUIDS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-          </select>
+          </CalcSelect>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label htmlFor="material-concentration" className="block text-sm font-medium text-white/80">Concentration (%)</label>
-            <input
+            <CalcLabel htmlFor="material-concentration">Concentration (%)</CalcLabel>
+            <CalcInput
               id="material-concentration"
               type="text"
               inputMode="decimal"
               value={concentration}
               onChange={e => { setConcentration(e.target.value); setErrors(prev => ({ ...prev, concentration: undefined })) }}
-              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
               aria-invalid={errors.concentration ? "true" : undefined}
               aria-describedby={errors.concentration ? "material-concentration-error" : undefined}
             />
-            {errors.concentration && <p id="material-concentration-error" className="text-xs text-red-400" role="alert">{errors.concentration}</p>}
+            {errors.concentration && <CalcError id="material-concentration-error">{errors.concentration}</CalcError>}
           </div>
           <div className="space-y-1">
-            <label htmlFor="material-temp" className="block text-sm font-medium text-white/80">Temperature (°C)</label>
-            <input
+            <CalcLabel htmlFor="material-temp">Temperature (°C)</CalcLabel>
+            <CalcInput
               id="material-temp"
               type="text"
               inputMode="decimal"
               value={temp}
               onChange={e => { setTemp(e.target.value); setErrors(prev => ({ ...prev, temp: undefined })) }}
-              className="w-full h-12 px-3 rounded-lg bg-white/5 border border-white/10 text-white text-lg focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40"
               aria-invalid={errors.temp ? "true" : undefined}
               aria-describedby={errors.temp ? "material-temp-error" : undefined}
             />
-            {errors.temp && <p id="material-temp-error" className="text-xs text-red-400" role="alert">{errors.temp}</p>}
+            {errors.temp && <CalcError id="material-temp-error">{errors.temp}</CalcError>}
           </div>
         </div>
         <button type="submit" disabled={loading || !fluid} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors" aria-busy={loading}>
@@ -110,7 +110,7 @@ export function MaterialSelectionForm() {
       {result && (
         <div className="space-y-4">
           {result.components.map(comp => (
-            <div key={comp.component} className="rounded-lg border border-white/10 overflow-hidden" style={{ backgroundColor: "#1A1D27" }}>
+            <CalcCard key={comp.component} className="overflow-hidden p-0">
               <div className="p-3 border-b border-white/10">
                 <h3 className="text-sm font-semibold text-white">{COMPONENT_LABELS[comp.component] ?? comp.component}</h3>
               </div>
@@ -127,7 +127,7 @@ export function MaterialSelectionForm() {
                   </div>
                 ))}
               </div>
-            </div>
+            </CalcCard>
           ))}
         </div>
       )}
