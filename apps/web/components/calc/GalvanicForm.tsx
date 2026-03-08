@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { GALVANIC_SERIES, checkGalvanicCompatibility, GalvanicResult } from "@/lib/galvanic"
-import { CalcSelect, CalcLabel } from "@/components/ui/calc-form"
+import { CalcSelect, CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
 const MATERIALS = Object.keys(GALVANIC_SERIES)
@@ -43,6 +43,10 @@ export function GalvanicForm() {
           Check Compatibility
         </button>
       </div>
+
+      {!result && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
+      )}
 
       {result && (
         <CalcCard className={`space-y-3 ${riskBg[result.risk]}`}>

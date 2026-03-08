@@ -3,7 +3,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
-import { CalcSelect, CalcLabel } from "@/components/ui/calc-form"
+import { CalcSelect, CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
 const GRADES = ["ASTM A193 B7", "ASTM A193 B8", "ISO 8.8", "ISO 10.9", "ISO 12.9", "SAE Grade 5", "SAE Grade 8", "A2-70", "A4-80"]
@@ -84,6 +84,10 @@ export function BoltTorqueForm() {
           ) : "Calculate Torque"}
         </button>
       </form>
+
+      {!result && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
+      )}
 
       {result && (
         <CalcCard className="space-y-3">

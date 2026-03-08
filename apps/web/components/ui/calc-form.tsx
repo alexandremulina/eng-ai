@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { BarChart2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const inputBase =
@@ -71,4 +72,21 @@ const CalcError = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
 )
 CalcError.displayName = "CalcError"
 
-export { CalcInput, CalcSelect, CalcLabel, CalcHint, CalcError }
+const CalcEmptyState = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col items-center gap-2 py-8 text-center text-white/30",
+        className
+      )}
+      {...props}
+    >
+      <BarChart2 size={28} aria-hidden />
+      <p className="text-sm">{children}</p>
+    </div>
+  )
+)
+CalcEmptyState.displayName = "CalcEmptyState"
+
+export { CalcInput, CalcSelect, CalcLabel, CalcHint, CalcError, CalcEmptyState }

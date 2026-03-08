@@ -3,7 +3,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
-import { CalcInput, CalcLabel, CalcHint, CalcError } from "@/components/ui/calc-form"
+import { CalcInput, CalcLabel, CalcHint, CalcError, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
 interface NPSHResult {
@@ -135,6 +135,10 @@ export function NPSHForm() {
           {loading ? "Calculating..." : "Calculate NPSHa"}
         </button>
       </form>
+
+      {!result && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
+      )}
 
       {result && (
         <CalcCard className="space-y-3">

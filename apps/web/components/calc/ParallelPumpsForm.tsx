@@ -3,7 +3,7 @@ import { useState, useRef } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
-import { CalcLabel } from "@/components/ui/calc-form"
+import { CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer,
@@ -236,6 +236,10 @@ export function ParallelPumpsForm() {
           {loading ? "Calculating..." : "Calculate Operating Point"}
         </button>
       </form>
+
+      {!result && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
+      )}
 
       {/* Results */}
       {result && (

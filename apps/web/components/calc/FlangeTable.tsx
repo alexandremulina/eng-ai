@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { NPS_OPTIONS, CLASS_OPTIONS, getFlangeDimensions, FlangeDimensions } from "@/lib/flanges"
-import { CalcSelect, CalcLabel } from "@/components/ui/calc-form"
+import { CalcSelect, CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
 export function FlangeTable() {
@@ -62,6 +62,10 @@ export function FlangeTable() {
             </tbody>
           </table>
         </CalcCard>
+      )}
+
+      {(!nps || !cls) && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
       )}
 
       {nps && cls && !dims && (

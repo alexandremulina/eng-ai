@@ -3,7 +3,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/useSession"
-import { CalcInput, CalcSelect, CalcLabel, CalcError } from "@/components/ui/calc-form"
+import { CalcInput, CalcSelect, CalcLabel, CalcError, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
 const FLUIDS = [
@@ -106,6 +106,10 @@ export function MaterialSelectionForm() {
           {loading ? "Loading..." : "Get Material Recommendations"}
         </button>
       </form>
+
+      {!result && (
+        <CalcEmptyState>Fill in the fields and calculate to see the result</CalcEmptyState>
+      )}
 
       {result && (
         <div className="space-y-4">
