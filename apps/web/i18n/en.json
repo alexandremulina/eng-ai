@@ -71,7 +71,9 @@
     "plans": "Available plans",
     "planFree": "Free",
     "active": "Active",
-    "popular": "Popular"
+    "popular": "Popular",
+    "upgradeTitle": "Upgrade to Pro",
+    "upgradeDescription": "Stripe payment integration coming soon. Contact us to upgrade manually."
   },
   "common": {
     "loading": "Loading...",

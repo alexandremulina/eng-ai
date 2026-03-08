@@ -71,7 +71,9 @@
     "plans": "Planes disponibles",
     "planFree": "Gratuito",
     "active": "Activo",
-    "popular": "Popular"
+    "popular": "Popular",
+    "upgradeTitle": "Actualiza a Pro",
+    "upgradeDescription": "Integración de pagos próximamente. Contáctanos para actualizar manualmente."
   },
   "common": {
     "loading": "Cargando...",

@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: "/calc", labelKey: "nav.calc", icon: Calculator, comingSoon: false },
   { href: "/norms", labelKey: "nav.norms", icon: BookOpen, comingSoon: true },
   { href: "/diagnosis", labelKey: "nav.diagnosis", icon: Camera, comingSoon: true },
-  { href: "/account", labelKey: "nav.account", icon: User, comingSoon: true },
+  { href: "/account", labelKey: "nav.account", icon: User, comingSoon: false },
 ]
 
 export function BottomNav() {
