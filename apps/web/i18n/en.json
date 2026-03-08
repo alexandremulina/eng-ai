@@ -54,7 +54,11 @@
   "diagnosis": {
     "title": "Photo Diagnosis",
     "upload": "Upload component photo",
-    "analyze": "Analyze"
+    "analyze": "Analyze",
+    "uploadHint": "Drag or select a component photo",
+    "uploadFormats": "JPG, PNG, PDF — mechanical seal, impeller, casing",
+    "proTitle": "Unlock Photo Diagnosis",
+    "proDescription": "Upload a photo of any pump component and get AI-powered failure analysis with recommended actions."
   },
   "account": {
     "title": "Account",

@@ -54,7 +54,11 @@
   "diagnosis": {
     "title": "Diagnóstico por Foto",
     "upload": "Enviar foto do componente",
-    "analyze": "Analisar"
+    "analyze": "Analisar",
+    "uploadHint": "Arraste ou selecione uma foto do componente",
+    "uploadFormats": "JPG, PNG, PDF — vedação mecânica, rotor, carcaça",
+    "proTitle": "Desbloqueie o Diagnóstico por Foto",
+    "proDescription": "Envie uma foto de qualquer componente de bomba e receba análise de falha via IA com ações recomendadas."
   },
   "account": {
     "title": "Conta",

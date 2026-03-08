@@ -54,7 +54,11 @@
   "diagnosis": {
     "title": "Diagnóstico por Foto",
     "upload": "Subir foto del componente",
-    "analyze": "Analizar"
+    "analyze": "Analizar",
+    "uploadHint": "Arrastra o selecciona una foto del componente",
+    "uploadFormats": "JPG, PNG, PDF — sello mecánico, impulsor, carcasa",
+    "proTitle": "Desbloquea el Diagnóstico por Foto",
+    "proDescription": "Sube una foto de cualquier componente de bomba y recibe análisis de fallo con IA y acciones recomendadas."
   },
   "account": {
     "title": "Cuenta",
