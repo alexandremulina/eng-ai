@@ -230,10 +230,15 @@ export function ParallelPumpsForm() {
         </CalcCard>
 
         <button type="submit" disabled={loading}
-          className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40"
+          className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-blue-500/40"
           aria-busy={loading}
         >
-          {loading ? "Calculating..." : "Calculate Operating Point"}
+          {loading ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+              Calculating…
+            </>
+          ) : "Calculate Operating Point"}
         </button>
       </form>
 

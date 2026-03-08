@@ -102,8 +102,13 @@ export function MaterialSelectionForm() {
             {errors.temp && <CalcError id="material-temp-error">{errors.temp}</CalcError>}
           </div>
         </div>
-        <button type="submit" disabled={loading || !fluid} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors" aria-busy={loading}>
-          {loading ? "Loading..." : "Get Material Recommendations"}
+        <button type="submit" disabled={loading || !fluid} className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-medium transition-colors flex items-center justify-center gap-2" aria-busy={loading}>
+          {loading ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+              Calculating…
+            </>
+          ) : "Select Materials"}
         </button>
       </form>
 
