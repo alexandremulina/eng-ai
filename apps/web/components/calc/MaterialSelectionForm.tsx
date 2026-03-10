@@ -2,7 +2,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
-import { useSession } from "@/lib/useSession"
 import { CalcInput, CalcSelect, CalcLabel, CalcError, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
@@ -31,7 +30,6 @@ const COMPONENT_LABELS: Record<string, string> = {
 }
 
 export function MaterialSelectionForm() {
-  const { token } = useSession()
   const [fluid, setFluid] = useState("")
   const [concentration, setConcentration] = useState("100")
   const [temp, setTemp] = useState("25")
@@ -51,11 +49,11 @@ export function MaterialSelectionForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!token || !fluid) { toast.error("Select a fluid and log in"); return }
+    if (!fluid) { toast.error("Select a fluid"); return }
     if (!validate()) return
     setLoading(true)
     try {
-      const data = await api.materialSelection({ fluid, concentration_pct: Number(concentration), temp_c: Number(temp) }, token) as SelectionResult
+      const data = await api.materialSelection({ fluid, concentration_pct: Number(concentration), temp_c: Number(temp) }) as SelectionResult
       setResult(data)
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "Request failed")

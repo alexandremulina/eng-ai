@@ -28,34 +28,33 @@ async function apiFetch<T>(
 }
 
 export const api = {
-  convert: (body: object, token: string) =>
+  convert: (body: object, token?: string) =>
     apiFetch("/calculations/convert", { method: "POST", body: JSON.stringify(body), token }),
-  npsh: (body: object, token: string) =>
+  npsh: (body: object, token?: string) =>
     apiFetch("/calculations/npsh", { method: "POST", body: JSON.stringify(body), token }),
-  headLoss: (body: object, token: string) =>
+  headLoss: (body: object, token?: string) =>
     apiFetch("/calculations/head-loss", { method: "POST", body: JSON.stringify(body), token }),
-  queryNorms: (body: object, token: string) =>
+  queryNorms: (body: object, token?: string) =>
     apiFetch("/norms/query", { method: "POST", body: JSON.stringify(body), token }),
-  diagnose: (formData: FormData, token: string) =>
+  diagnose: (formData: FormData, token?: string) =>
     apiFetch("/diagnosis/analyze", {
       method: "POST",
       body: formData,
       token,
-      // Don't set Content-Type for multipart — browser sets it with boundary
       headers: {},
     }),
-  parallelPumps: (body: object, token: string) =>
+  parallelPumps: (body: object, token?: string) =>
     apiFetch("/calculations/parallel-pumps", { method: "POST", body: JSON.stringify(body), token }),
-  extractPumpCurve: (formData: FormData, token: string) =>
+  extractPumpCurve: (formData: FormData, token?: string) =>
     apiFetch("/calculations/extract-pump-curve", {
       method: "POST",
       body: formData,
       token,
       headers: {},
     }),
-  boltTorque: (body: object, token: string) =>
+  boltTorque: (body: object, token?: string) =>
     apiFetch("/calculations/bolt-torque", { method: "POST", body: JSON.stringify(body), token }),
-  materialSelection: (body: object, token: string) =>
+  materialSelection: (body: object, token?: string) =>
     apiFetch("/calculations/material-selection", { method: "POST", body: JSON.stringify(body), token }),
 }
 

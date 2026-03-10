@@ -2,7 +2,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
-import { useSession } from "@/lib/useSession"
 import { CalcSelect, CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
@@ -23,7 +22,6 @@ interface BoltResult {
 }
 
 export function BoltTorqueForm() {
-  const { token } = useSession()
   const [grade, setGrade] = useState(GRADES[0])
   const [diameter, setDiameter] = useState(20)
   const [condition, setCondition] = useState("dry")
@@ -32,10 +30,9 @@ export function BoltTorqueForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!token) { toast.error("Please log in"); return }
     setLoading(true)
     try {
-      const data = await api.boltTorque({ grade, diameter_mm: diameter, condition }, token) as BoltResult
+      const data = await api.boltTorque({ grade, diameter_mm: diameter, condition }) as BoltResult
       setResult(data)
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "Calculation failed")

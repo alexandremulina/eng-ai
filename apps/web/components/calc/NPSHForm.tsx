@@ -2,7 +2,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
-import { useSession } from "@/lib/useSession"
 import { CalcInput, CalcLabel, CalcHint, CalcError, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 
@@ -33,7 +32,6 @@ const FIELDS = [
 ] as const
 
 export function NPSHForm() {
-  const { token } = useSession()
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<NPSHResult | null>(null)
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
@@ -71,10 +69,6 @@ export function NPSHForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!token) {
-      toast.error("Please log in to use calculators")
-      return
-    }
     if (!validate()) return
     setLoading(true)
     setResult(null)
@@ -89,7 +83,7 @@ export function NPSHForm() {
       if (form.npshr_m) {
         body.npshr_m = Number(form.npshr_m)
       }
-      const data = await api.npsh(body, token) as NPSHResult
+      const data = await api.npsh(body) as NPSHResult
       setResult(data)
     } catch (err) {
       if (err instanceof ApiError && err.status === 429) {

@@ -2,7 +2,6 @@
 import { useState, useRef } from "react"
 import { toast } from "sonner"
 import { api, ApiError } from "@/lib/api"
-import { useSession } from "@/lib/useSession"
 import { CalcLabel, CalcEmptyState } from "@/components/ui/calc-form"
 import { CalcCard } from "@/components/ui/calc-card"
 import {
@@ -24,7 +23,6 @@ const PUMP_COLORS = ["#0066FF", "#00C853", "#FF6B35", "#A855F7"]
 const EMPTY_PUMP = (): PumpData => ({ name: "", points: [{ q: 0, h: 0 }, { q: 0, h: 0 }, { q: 0, h: 0 }], bep_q: "" })
 
 export function ParallelPumpsForm() {
-  const { token } = useSession()
   const [pumps, setPumps] = useState<PumpData[]>([EMPTY_PUMP()])
   const [staticHead, setStaticHead] = useState("5")
   const [resistance, setResistance] = useState("0.04")
@@ -67,12 +65,11 @@ export function ParallelPumpsForm() {
   }
 
   async function extractCurve(pumpIdx: number, file: File) {
-    if (!token) { toast.error("Please log in"); return }
     setExtracting(pumpIdx)
     try {
       const formData = new FormData()
       formData.append("file", file)
-      const data = await api.extractPumpCurve(formData, token) as { points: HQPoint[] }
+      const data = await api.extractPumpCurve(formData) as { points: HQPoint[] }
       setPumps(prev => prev.map((p, i) => i === pumpIdx ? { ...p, points: data.points } : p))
       toast.success(`Extracted ${data.points.length} points from datasheet`)
     } catch (err) {
@@ -84,7 +81,6 @@ export function ParallelPumpsForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!token) { toast.error("Please log in"); return }
     setLoading(true)
     try {
       const body = {
@@ -95,7 +91,7 @@ export function ParallelPumpsForm() {
         })),
         system_curve: { static_head: Number(staticHead), resistance: Number(resistance) },
       }
-      const data = await api.parallelPumps(body, token) as ParallelResult
+      const data = await api.parallelPumps(body) as ParallelResult
       setResult(data)
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "Calculation failed")
