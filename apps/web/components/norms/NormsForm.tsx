@@ -49,7 +49,7 @@ export function NormsForm() {
         <textarea
           value={question}
           onChange={e => setQuestion(e.target.value)}
-          placeholder="Ask about API 610, ASME B73.1, ISO 5199..."
+          placeholder={"e.g. What are the hydrostatic test requirements per API 610?\ne.g. Compare vibration limits between API 610 and ISO 5199"}
           rows={3}
           className="w-full px-4 py-3 rounded-lg bg-[var(--color-input-bg)] border border-[var(--color-border-subtle)] text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/40 resize-none"
         />
@@ -64,12 +64,30 @@ export function NormsForm() {
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
               Searching…
             </>
-          ) : "Search Standards"}
+          ) : "Ask Question"}
         </button>
       </form>
 
       {!result && !loading && (
-        <CalcEmptyState>Ask a question about engineering standards to get AI-powered answers with citations</CalcEmptyState>
+        <div className="space-y-3">
+          <CalcEmptyState>Ask a specific question about engineering standards</CalcEmptyState>
+          <div className="grid grid-cols-1 gap-2">
+            {[
+              "What are the minimum flow requirements per API 610?",
+              "Hydrostatic test pressure and duration per ASME B73.1?",
+              "Compare allowable vibration limits: API 610 vs ISO 5199",
+            ].map(q => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => { setQuestion(q); setResult(null) }}
+                className="text-left text-xs text-white/40 hover:text-white/70 px-3 py-2 rounded-lg border border-white/5 hover:border-white/15 transition-colors"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
 
       {result && (
