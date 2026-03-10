@@ -60,35 +60,40 @@ async def search_norm_documents(
     return results.data or []
 
 
+# TODO: re-enable RAG pipeline when pgvector tables are set up
+# async def _query_norms_rag(question: str, user_id: str, language: str = "en") -> dict:
+#     """RAG query against norm documents (requires pgvector)."""
+#     question_embedding = await get_embedding(question)
+#     results = await search_norm_documents(question_embedding, user_id)
+#     if not results:
+#         return {"answer": "No relevant norm sections found for this query.", "citations": []}
+#     context_chunks = [r["content"] for r in results]
+#     citations = [
+#         {"source": r.get("metadata", {}).get("source", "Unknown"),
+#          "page": r.get("metadata", {}).get("page"),
+#          "similarity": round(r.get("similarity", 0), 3)}
+#         for r in results
+#     ]
+#     context = "\n\n---\n\n".join(context_chunks)
+#     messages = [
+#         {"role": "system", "content": NORM_SYSTEM_PROMPT},
+#         {"role": "user", "content": f"Context from norm documents:\n\n{context}\n\nQuestion: {question}"},
+#     ]
+#     answer = await call_llm(messages, task="rag", temperature=0.0)
+#     return {"answer": answer, "citations": citations}
+
+
 async def query_norms(question: str, user_id: str, language: str = "en") -> dict:
-    """RAG query against norm documents."""
-    question_embedding = await get_embedding(question)
-    results = await search_norm_documents(question_embedding, user_id)
-
-    if not results:
-        return {
-            "answer": "No relevant norm sections found for this query.",
-            "citations": [],
-        }
-
-    context_chunks = [r["content"] for r in results]
-    citations = [
-        {
-            "source": r.get("metadata", {}).get("source", "Unknown"),
-            "page": r.get("metadata", {}).get("page"),
-            "similarity": round(r.get("similarity", 0), 3),
-        }
-        for r in results
-    ]
-    context = "\n\n---\n\n".join(context_chunks)
+    """Direct LLM query (no RAG) — temporary until pgvector is ready."""
+    lang_instruction = {
+        "pt": "Respond in Brazilian Portuguese.",
+        "es": "Respond in Spanish.",
+        "en": "Respond in English.",
+    }.get(language, "")
 
     messages = [
-        {"role": "system", "content": NORM_SYSTEM_PROMPT},
-        {
-            "role": "user",
-            "content": f"Context from norm documents:\n\n{context}\n\nQuestion: {question}",
-        },
+        {"role": "system", "content": f"{NORM_SYSTEM_PROMPT}\n\n{lang_instruction}"},
+        {"role": "user", "content": question},
     ]
-
     answer = await call_llm(messages, task="rag", temperature=0.0)
-    return {"answer": answer, "citations": citations}
+    return {"answer": answer, "citations": []}
