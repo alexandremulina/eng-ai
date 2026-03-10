@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
   { href: "/calc", labelKey: "nav.calc", icon: Calculator, comingSoon: false },
-  { href: "/norms", labelKey: "nav.norms", icon: BookOpen, comingSoon: true },
-  { href: "/diagnosis", labelKey: "nav.diagnosis", icon: Camera, comingSoon: true },
+  { href: "/norms", labelKey: "nav.norms", icon: BookOpen, comingSoon: false },
+  { href: "/diagnosis", labelKey: "nav.diagnosis", icon: Camera, comingSoon: false },
   { href: "/account", labelKey: "nav.account", icon: User, comingSoon: false },
 ]
 
