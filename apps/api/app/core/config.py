@@ -14,7 +14,11 @@ class Settings(BaseSettings):
     stripe_secret_key: Optional[str] = None
     stripe_webhook_secret: Optional[str] = None
     environment: str = "development"
-    cors_origins: list[str] = ["http://localhost:3000", "https://engbrain.app"]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "https://engbrain.app",
+        "https://eng-ai-web.vercel.app",
+    ]
 
 
 @lru_cache
