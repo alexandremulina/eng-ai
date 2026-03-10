@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     cors_origins: list[str] = [
         "http://localhost:3000",
         "https://engbrain.app",
-        "https://eng-ai-web.vercel.app",
+        "https://brain-eng-ai.vercel.app",
     ]
 
 
