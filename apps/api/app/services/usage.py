@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from app.core.auth import AUTH_DISABLED
 from app.core.supabase import get_supabase
 
 PLAN_LIMITS = {
@@ -36,6 +37,8 @@ def count_monthly_usage(user_id: str, event_type: str) -> int:
 
 def check_and_record_usage(user_id: str, event_type: str) -> None:
     """Raise ValueError if over limit, else record the event."""
+    if AUTH_DISABLED:
+        return
     plan = get_user_plan(user_id)
     limit = PLAN_LIMITS.get(plan, PLAN_LIMITS["free"]).get(event_type)
     if limit is not None:
