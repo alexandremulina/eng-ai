@@ -18,6 +18,7 @@ from app.services.parallel_pumps import (
     PumpInput as SvcPumpInput,
 )
 from app.services.material_selection import select_materials
+from app.services.fluid_properties import get_fluid_properties, AVAILABLE_FLUIDS
 
 router = APIRouter(prefix="/calculations", tags=["calculations"])
 
@@ -233,6 +234,26 @@ async def material_selection(req: MaterialSelectionRequest, user: dict = Depends
                 }
                 for c in result
             ],
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class FluidPropertiesRequest(BaseModel):
+    fluid: str
+    temp_c: float = Field(..., ge=-10, le=200)
+
+
+@router.post("/fluid-properties")
+async def fluid_properties(req: FluidPropertiesRequest, user: dict = Depends(get_current_user)):
+    try:
+        props = get_fluid_properties(req.fluid, req.temp_c)
+        return {
+            "fluid": props.fluid,
+            "temp_c": props.temp_c,
+            "density_kg_m3": props.density_kg_m3,
+            "vapor_pressure_kpa": props.vapor_pressure_kpa,
+            "available_fluids": AVAILABLE_FLUIDS,
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
