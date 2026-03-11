@@ -34,7 +34,12 @@
       "Bash(PYTHONPATH=/mnt/c/users/alexa/projects/eng-brain/apps/api /usr/bin/python3.10:*)",
       "Bash(pip3 show:*)",
       "Bash(pip3 install:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(find /mnt/c/users/alexa/projects/eng-brain -name \"*.json\" -path \"*/locale*\" -o -name \"*.json\" -path \"*/translation*\" -o -name \"*.json\" -path \"*/i18n*\" 2>/dev/null | grep -v node_modules | grep -v \".venv\")",
+      "Bash(find /mnt/c/users/alexa/projects/eng-brain/apps -maxdepth 4 -type f \\\\\\( -name \"*curve*\" -o -name \"*pump*\" \\\\\\) 2>/dev/null | grep -v node_modules | grep -v \".next\" | grep -v \".venv\")",
+      "Bash(find /mnt/c/users/alexa/projects/eng-brain/apps/web -name \"*arallel*\" -o -name \"*umps*\" 2>/dev/null | grep -v node_modules | grep -v \".next\")",
+      "Bash(ls -la /mnt/c/users/alexa/projects/eng-brain/apps/web/app/\\\\\\(app\\\\\\)/calc/)",
+      "Bash(cd /mnt/c/users/alexa/projects/eng-brain/apps/web && npm run build 2>&1 | tail -30)"
     ]
   }
 }
