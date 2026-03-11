@@ -12,13 +12,13 @@
       "description": "Ponto de operação para múltiplas bombas em paralelo — inclusive modelos diferentes"
     },
     "npsh": {
-      "title": "Calculadora NPSH",
+      "title": "Calculadora NPSHa",
       "description": "NPSH disponível — prevenir cavitação",
       "subtitle": "NPSH disponível",
-      "result": "Resultado NPSHd",
+      "result": "Resultado NPSHa",
       "safe": "Seguro",
       "risk": "Risco de Cavitação",
-      "calculate": "Calcular NPSHd",
+      "calculate": "Calcular NPSHa",
       "calculating": "Calculando..."
     },
     "headLoss": {
