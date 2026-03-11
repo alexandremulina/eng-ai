@@ -33,6 +33,55 @@ def test_unknown_fluid_raises():
         select_materials(fluid="__unknown__", concentration_pct=50.0, temp_c=20.0)
 
 
+def test_carbon_steel_caustic_soda_below_60c_recommended():
+    result = select_materials(fluid="caustic_soda", concentration_pct=50.0, temp_c=40.0)
+    casing = next(r for r in result if r.component == "casing")
+    cs = next(m for m in casing.materials if m.material == "Carbon Steel")
+    assert cs.rating == "recommended"
+
+
+def test_carbon_steel_caustic_soda_above_60c_incompatible():
+    result = select_materials(fluid="caustic_soda", concentration_pct=50.0, temp_c=80.0)
+    casing = next(r for r in result if r.component == "casing")
+    cs = next(m for m in casing.materials if m.material == "Carbon Steel")
+    assert cs.rating == "incompatible"
+
+
+def test_carbon_steel_caustic_soda_above_60c_has_note():
+    result = select_materials(fluid="caustic_soda", concentration_pct=50.0, temp_c=80.0)
+    casing = next(r for r in result if r.component == "casing")
+    cs = next(m for m in casing.materials if m.material == "Carbon Steel")
+    assert "60" in cs.note
+
+
+def test_sulfuric_acid_ss316_mid_concentration_incompatible():
+    result = select_materials(fluid="sulfuric_acid", concentration_pct=30.0, temp_c=25.0)
+    casing = next(r for r in result if r.component == "casing")
+    ss316 = next(m for m in casing.materials if m.material == "SS 316")
+    assert ss316.rating == "incompatible"
+
+
+def test_sulfuric_acid_ss316_low_concentration_conditional():
+    result = select_materials(fluid="sulfuric_acid", concentration_pct=3.0, temp_c=25.0)
+    casing = next(r for r in result if r.component == "casing")
+    ss316 = next(m for m in casing.materials if m.material == "SS 316")
+    assert ss316.rating == "conditional"
+
+
+def test_nbr_caustic_soda_above_40c_incompatible():
+    result = select_materials(fluid="caustic_soda", concentration_pct=50.0, temp_c=50.0)
+    orings = next(r for r in result if r.component == "o_rings")
+    nbr = next(m for m in orings.materials if m.material == "NBR")
+    assert nbr.rating == "incompatible"
+
+
+def test_water_carbon_steel_casing_present():
+    result = select_materials(fluid="water", concentration_pct=100.0, temp_c=25.0)
+    casing = next(r for r in result if r.component == "casing")
+    materials = [m.material for m in casing.materials]
+    assert "Carbon Steel" in materials
+
+
 @pytest.mark.asyncio
 async def test_material_selection_endpoint(mock_user):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
