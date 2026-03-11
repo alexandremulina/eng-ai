@@ -56,6 +56,8 @@ export const api = {
     apiFetch("/calculations/bolt-torque", { method: "POST", body: JSON.stringify(body), token }),
   materialSelection: (body: object, token?: string) =>
     apiFetch("/calculations/material-selection", { method: "POST", body: JSON.stringify(body), token }),
+  fluidProperties: (body: object, token?: string) =>
+    apiFetch("/calculations/fluid-properties", { method: "POST", body: JSON.stringify(body), token }),
 }
 
 export { ApiError }
