@@ -123,12 +123,22 @@ export function MaterialSelectionForm() {
               </div>
               <div className="divide-y divide-white/5">
                 {comp.materials.map(m => (
-                  <div key={m.material} className="flex items-center justify-between p-3">
-                    <div>
+                  <div key={m.material} className="flex items-start justify-between p-3 gap-3">
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm text-white">{m.material}</p>
-                      {m.note && <p className="text-xs text-white/40 mt-0.5">{m.note}</p>}
+                      {m.note && (
+                        <p className={`text-xs mt-0.5 ${
+                          m.rating === "incompatible"
+                            ? "text-red-400/80"
+                            : m.rating === "conditional"
+                              ? "text-yellow-400/80"
+                              : "text-white/40"
+                        }`}>
+                          {m.note}
+                        </p>
+                      )}
                     </div>
-                    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium capitalize ${RATING_STYLE[m.rating] ?? ""}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium capitalize shrink-0 ${RATING_STYLE[m.rating] ?? ""}`}>
                       {m.rating}
                     </span>
                   </div>
