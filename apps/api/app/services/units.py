@@ -16,6 +16,7 @@ UNIT_MAP = {
     "bar": "bar",
     "kPa": "kilopascal",
     "MPa": "megapascal",
+    "kgf/cm2": "kilogram_force / centimeter**2",
     "degC": "degC",
     "degF": "degF",
     "K": "kelvin",

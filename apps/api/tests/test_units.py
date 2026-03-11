@@ -29,6 +29,16 @@ def test_temperature_celsius_to_fahrenheit():
     assert abs(result - 212.0) < 0.001
 
 
+def test_pressure_kgcm2_to_kpa():
+    result = convert_unit(1.0, "kgf/cm2", "kPa")
+    assert abs(result - 98.0665) < 0.01
+
+
+def test_pressure_kpa_to_kgcm2():
+    result = convert_unit(101.325, "kPa", "kgf/cm2")
+    assert abs(result - 1.0332) < 0.01
+
+
 @pytest.mark.asyncio
 async def test_convert_endpoint_success(mock_user):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
